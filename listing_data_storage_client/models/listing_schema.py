@@ -4,7 +4,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.custom_split_schema import CustomSplitSchema
+    from ..models.listing_schema_custom_split_item import ListingSchemaCustomSplitItem
 
 
 T = TypeVar("T", bound="ListingSchema")
@@ -25,7 +25,7 @@ class ListingSchema:
         description (str): Textual description of the listing.
         attributes (List[str]): Additional characteristics or features of the listing.
         split_type (str): Type of splitting allowed for the listing.
-        custom_split (List['CustomSplitSchema']): Custom optional splits available for purchase
+        custom_split (List['ListingSchemaCustomSplitItem']): Custom optional splits available for purchase
     """
 
     listing_id: str
@@ -38,7 +38,7 @@ class ListingSchema:
     description: str
     attributes: List[str]
     split_type: str
-    custom_split: List["CustomSplitSchema"]
+    custom_split: List["ListingSchemaCustomSplitItem"]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -89,7 +89,7 @@ class ListingSchema:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.custom_split_schema import CustomSplitSchema
+        from ..models.listing_schema_custom_split_item import ListingSchemaCustomSplitItem
 
         d = src_dict.copy()
         listing_id = d.pop("listingId")
@@ -115,7 +115,7 @@ class ListingSchema:
         custom_split = []
         _custom_split = d.pop("customSplit")
         for custom_split_item_data in _custom_split:
-            custom_split_item = CustomSplitSchema.from_dict(custom_split_item_data)
+            custom_split_item = ListingSchemaCustomSplitItem.from_dict(custom_split_item_data)
 
             custom_split.append(custom_split_item)
 
