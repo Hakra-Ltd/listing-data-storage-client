@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "listing-data-store-client"
+name = "listing-data-storage-client"
 version = "0.1.0"
 description = "A client library for accessing FastAPI"
 authors = []
 readme = "README.md"
 packages = [
-    {include = "listing_data_store_client"},
+    {include = "listing_data_storage_client"},
 ]
-include = ["CHANGELOG.md", "listing_data_store_client/py.typed"]
+include = ["CHANGELOG.md", "listing_data_storage_client/py.typed"]
 
 
 [tool.poetry.dependencies]
