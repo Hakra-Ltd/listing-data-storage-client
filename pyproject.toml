@@ -5,7 +5,7 @@ description = "A client library for accessing FastAPI"
 authors = []
 readme = "README.md"
 packages = [
-    {include = "fast_api_client"},
+    {include = "listing_data_store_client"},
 ]
 include = ["CHANGELOG.md", "listing_data_store_client/py.typed"]
 
