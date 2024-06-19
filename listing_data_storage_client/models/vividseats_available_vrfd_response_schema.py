@@ -19,16 +19,18 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.validation_error import ValidationError
+from listing_data_storage_client.models.available_info import AvailableInfo
+from listing_data_storage_client.models.vividseats_available_schema import VividseatsAvailableSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class HTTPValidationError(BaseModel):
+class VividseatsAvailableVrfdResponseSchema(BaseModel):
     """
-    HTTPValidationError
+    VividseatsAvailableVrfdResponseSchema
     """ # noqa: E501
-    detail: Optional[List[ValidationError]] = None
-    __properties: ClassVar[List[str]] = ["detail"]
+    info: AvailableInfo
+    available_data: Optional[List[VividseatsAvailableSchema]] = None
+    __properties: ClassVar[List[str]] = ["info", "available_data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class HTTPValidationError(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a JSON string"""
+        """Create an instance of VividseatsAvailableVrfdResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,18 +71,21 @@ class HTTPValidationError(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in detail (list)
+        # override the default output from pydantic by calling `to_dict()` of info
+        if self.info:
+            _dict['info'] = self.info.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in available_data (list)
         _items = []
-        if self.detail:
-            for _item_detail in self.detail:
-                if _item_detail:
-                    _items.append(_item_detail.to_dict())
-            _dict['detail'] = _items
+        if self.available_data:
+            for _item_available_data in self.available_data:
+                if _item_available_data:
+                    _items.append(_item_available_data.to_dict())
+            _dict['available_data'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a dict"""
+        """Create an instance of VividseatsAvailableVrfdResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -88,7 +93,8 @@ class HTTPValidationError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "detail": [ValidationError.from_dict(_item) for _item in obj["detail"]] if obj.get("detail") is not None else None
+            "info": AvailableInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
+            "available_data": [VividseatsAvailableSchema.from_dict(_item) for _item in obj["available_data"]] if obj.get("available_data") is not None else None
         })
         return _obj
 
