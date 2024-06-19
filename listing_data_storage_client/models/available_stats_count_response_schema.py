@@ -19,16 +19,16 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.validation_error import ValidationError
+from listing_data_storage_client.models.stats_count_schema import StatsCountSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class HTTPValidationError(BaseModel):
+class AvailableStatsCountResponseSchema(BaseModel):
     """
-    HTTPValidationError
+    AvailableStatsCountResponseSchema
     """ # noqa: E501
-    detail: Optional[List[ValidationError]] = None
-    __properties: ClassVar[List[str]] = ["detail"]
+    available_stats: Optional[List[StatsCountSchema]] = None
+    __properties: ClassVar[List[str]] = ["available_stats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class HTTPValidationError(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a JSON string"""
+        """Create an instance of AvailableStatsCountResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,18 +69,18 @@ class HTTPValidationError(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in detail (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in available_stats (list)
         _items = []
-        if self.detail:
-            for _item_detail in self.detail:
-                if _item_detail:
-                    _items.append(_item_detail.to_dict())
-            _dict['detail'] = _items
+        if self.available_stats:
+            for _item_available_stats in self.available_stats:
+                if _item_available_stats:
+                    _items.append(_item_available_stats.to_dict())
+            _dict['available_stats'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a dict"""
+        """Create an instance of AvailableStatsCountResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -88,7 +88,7 @@ class HTTPValidationError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "detail": [ValidationError.from_dict(_item) for _item in obj["detail"]] if obj.get("detail") is not None else None
+            "available_stats": [StatsCountSchema.from_dict(_item) for _item in obj["available_stats"]] if obj.get("available_stats") is not None else None
         })
         return _obj
 
