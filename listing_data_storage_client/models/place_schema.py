@@ -17,18 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.validation_error import ValidationError
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class HTTPValidationError(BaseModel):
+class PlaceSchema(BaseModel):
     """
-    HTTPValidationError
+    PlaceSchema
     """ # noqa: E501
-    detail: Optional[List[ValidationError]] = None
-    __properties: ClassVar[List[str]] = ["detail"]
+    place_id: Optional[Annotated[str, Field(strict=True, max_length=50)]] = Field(default=None, alias="placeId")
+    section_full: StrictStr = Field(alias="sectionFull")
+    section: StrictStr
+    row: StrictStr
+    row_rank: Optional[StrictInt] = Field(default=None, alias="rowRank")
+    count: Optional[StrictInt]
+    seat_number: Optional[StrictStr] = Field(default=None, alias="seatNumber")
+    __properties: ClassVar[List[str]] = ["placeId", "sectionFull", "section", "row", "rowRank", "count", "seatNumber"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +54,7 @@ class HTTPValidationError(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a JSON string"""
+        """Create an instance of PlaceSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,18 +75,31 @@ class HTTPValidationError(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in detail (list)
-        _items = []
-        if self.detail:
-            for _item_detail in self.detail:
-                if _item_detail:
-                    _items.append(_item_detail.to_dict())
-            _dict['detail'] = _items
+        # set to None if place_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.place_id is None and "place_id" in self.model_fields_set:
+            _dict['placeId'] = None
+
+        # set to None if row_rank (nullable) is None
+        # and model_fields_set contains the field
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['rowRank'] = None
+
+        # set to None if count (nullable) is None
+        # and model_fields_set contains the field
+        if self.count is None and "count" in self.model_fields_set:
+            _dict['count'] = None
+
+        # set to None if seat_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seatNumber'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a dict"""
+        """Create an instance of PlaceSchema from a dict"""
         if obj is None:
             return None
 
@@ -88,7 +107,13 @@ class HTTPValidationError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "detail": [ValidationError.from_dict(_item) for _item in obj["detail"]] if obj.get("detail") is not None else None
+            "placeId": obj.get("placeId"),
+            "sectionFull": obj.get("sectionFull"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "rowRank": obj.get("rowRank"),
+            "count": obj.get("count"),
+            "seatNumber": obj.get("seatNumber")
         })
         return _obj
 
