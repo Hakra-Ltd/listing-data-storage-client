@@ -17,18 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.validation_error import ValidationError
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
+from listing_data_storage_client.models.price import Price
 from typing import Optional, Set
 from typing_extensions import Self
 
-class HTTPValidationError(BaseModel):
+class SeatStoreSchema(BaseModel):
     """
-    HTTPValidationError
+    SeatStoreSchema
     """ # noqa: E501
-    detail: Optional[List[ValidationError]] = None
-    __properties: ClassVar[List[str]] = ["detail"]
+    place_id: StrictStr = Field(alias="placeId")
+    section: StrictStr
+    section_code: StrictStr
+    row: StrictStr
+    quantity: StrictInt
+    sellable_quantities: List[StrictInt] = Field(alias="sellableQuantities")
+    price: Price
+    notes: StrictStr
+    __properties: ClassVar[List[str]] = ["placeId", "section", "section_code", "row", "quantity", "sellableQuantities", "price", "notes"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +55,7 @@ class HTTPValidationError(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a JSON string"""
+        """Create an instance of SeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,18 +76,14 @@ class HTTPValidationError(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in detail (list)
-        _items = []
-        if self.detail:
-            for _item_detail in self.detail:
-                if _item_detail:
-                    _items.append(_item_detail.to_dict())
-            _dict['detail'] = _items
+        # override the default output from pydantic by calling `to_dict()` of price
+        if self.price:
+            _dict['price'] = self.price.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a dict"""
+        """Create an instance of SeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -88,7 +91,14 @@ class HTTPValidationError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "detail": [ValidationError.from_dict(_item) for _item in obj["detail"]] if obj.get("detail") is not None else None
+            "placeId": obj.get("placeId"),
+            "section": obj.get("section"),
+            "section_code": obj.get("section_code"),
+            "row": obj.get("row"),
+            "quantity": obj.get("quantity"),
+            "sellableQuantities": obj.get("sellableQuantities"),
+            "price": Price.from_dict(obj["price"]) if obj.get("price") is not None else None,
+            "notes": obj.get("notes")
         })
         return _obj
 
