@@ -19,16 +19,20 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.validation_error import ValidationError
+from listing_data_storage_client.models.pagination_schema import PaginationSchema
+from listing_data_storage_client.models.sold_info import SoldInfo
+from listing_data_storage_client.models.ticketmaster_sold_schema import TicketmasterSoldSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class HTTPValidationError(BaseModel):
+class TicketmasterSoldResponseSchema(BaseModel):
     """
-    HTTPValidationError
+    TicketmasterSoldResponseSchema
     """ # noqa: E501
-    detail: Optional[List[ValidationError]] = None
-    __properties: ClassVar[List[str]] = ["detail"]
+    pagination: PaginationSchema
+    info: SoldInfo
+    sold_data: Optional[List[TicketmasterSoldSchema]] = None
+    __properties: ClassVar[List[str]] = ["pagination", "info", "sold_data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +52,7 @@ class HTTPValidationError(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a JSON string"""
+        """Create an instance of TicketmasterSoldResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,18 +73,24 @@ class HTTPValidationError(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in detail (list)
+        # override the default output from pydantic by calling `to_dict()` of pagination
+        if self.pagination:
+            _dict['pagination'] = self.pagination.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of info
+        if self.info:
+            _dict['info'] = self.info.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in sold_data (list)
         _items = []
-        if self.detail:
-            for _item_detail in self.detail:
-                if _item_detail:
-                    _items.append(_item_detail.to_dict())
-            _dict['detail'] = _items
+        if self.sold_data:
+            for _item_sold_data in self.sold_data:
+                if _item_sold_data:
+                    _items.append(_item_sold_data.to_dict())
+            _dict['sold_data'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of HTTPValidationError from a dict"""
+        """Create an instance of TicketmasterSoldResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -88,7 +98,9 @@ class HTTPValidationError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "detail": [ValidationError.from_dict(_item) for _item in obj["detail"]] if obj.get("detail") is not None else None
+            "pagination": PaginationSchema.from_dict(obj["pagination"]) if obj.get("pagination") is not None else None,
+            "info": SoldInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
+            "sold_data": [TicketmasterSoldSchema.from_dict(_item) for _item in obj["sold_data"]] if obj.get("sold_data") is not None else None
         })
         return _obj
 
