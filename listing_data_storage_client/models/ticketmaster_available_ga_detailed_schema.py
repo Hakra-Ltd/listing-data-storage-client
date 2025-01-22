@@ -23,22 +23,21 @@ from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TicketmasterAvailableDetailedSchema(BaseModel):
+class TicketmasterAvailableGaDetailedSchema(BaseModel):
     """
-    TicketmasterAvailableDetailedSchema
+    TicketmasterAvailableGaDetailedSchema
     """ # noqa: E501
     place_id: StrictStr
     section: StrictStr
     row: StrictStr
-    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
-    seat_number: Optional[StrictStr]
+    count: Annotated[int, Field(strict=True, ge=0)]
     attributes: List[StrictStr]
     offer_name: Optional[StrictStr]
     description: List[StrictStr]
     inventory_type: Optional[StrictStr]
     list_price: Optional[StrictStr]
     total_price: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "row_rank", "seat_number", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -58,7 +57,7 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailableDetailedSchema from a JSON string"""
+        """Create an instance of TicketmasterAvailableGaDetailedSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,16 +78,6 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if row_rank (nullable) is None
-        # and model_fields_set contains the field
-        if self.row_rank is None and "row_rank" in self.model_fields_set:
-            _dict['row_rank'] = None
-
-        # set to None if seat_number (nullable) is None
-        # and model_fields_set contains the field
-        if self.seat_number is None and "seat_number" in self.model_fields_set:
-            _dict['seat_number'] = None
-
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
@@ -113,7 +102,7 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailableDetailedSchema from a dict"""
+        """Create an instance of TicketmasterAvailableGaDetailedSchema from a dict"""
         if obj is None:
             return None
 
@@ -124,8 +113,7 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
             "place_id": obj.get("place_id"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "row_rank": obj.get("row_rank"),
-            "seat_number": obj.get("seat_number"),
+            "count": obj.get("count"),
             "attributes": obj.get("attributes"),
             "offer_name": obj.get("offer_name"),
             "description": obj.get("description"),

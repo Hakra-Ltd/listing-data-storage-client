@@ -28,6 +28,8 @@ class TicketmasterUpdateItemSchema(str, Enum):
     """
     LIST_PRICE = 'LIST_PRICE'
     TOTAL_PRICE = 'TOTAL_PRICE'
+    OFFER_NAME = 'OFFER_NAME'
+    INVENTORY_TYPE = 'INVENTORY_TYPE'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
