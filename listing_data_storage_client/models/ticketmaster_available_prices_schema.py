@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,9 @@ class TicketmasterAvailablePricesSchema(BaseModel):
     place_id: StrictStr
     listing_price: StrictStr
     total_price: StrictStr
-    __properties: ClassVar[List[str]] = ["place_id", "listing_price", "total_price"]
+    offer_name: Optional[StrictStr] = None
+    inventory_type: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["place_id", "listing_price", "total_price", "offer_name", "inventory_type"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +72,16 @@ class TicketmasterAvailablePricesSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if offer_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_name is None and "offer_name" in self.model_fields_set:
+            _dict['offer_name'] = None
+
+        # set to None if inventory_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.inventory_type is None and "inventory_type" in self.model_fields_set:
+            _dict['inventory_type'] = None
+
         return _dict
 
     @classmethod
@@ -84,7 +96,9 @@ class TicketmasterAvailablePricesSchema(BaseModel):
         _obj = cls.model_validate({
             "place_id": obj.get("place_id"),
             "listing_price": obj.get("listing_price"),
-            "total_price": obj.get("total_price")
+            "total_price": obj.get("total_price"),
+            "offer_name": obj.get("offer_name"),
+            "inventory_type": obj.get("inventory_type")
         })
         return _obj
 
