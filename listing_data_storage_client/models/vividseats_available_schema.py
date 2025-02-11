@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,13 +28,16 @@ class VividseatsAvailableSchema(BaseModel):
     """
     VividseatsAvailableSchema
     """ # noqa: E501
-    quantity: StrictInt = Field(description="Quantity")
-    sellable_quantities: List[StrictInt] = Field(description="Sellable quantities")
     place_id: StrictStr
     section: StrictStr
     row: StrictStr
     price: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["quantity", "sellable_quantities", "place_id", "section", "row", "price"]
+    notes: Optional[StrictStr]
+    inserted: datetime
+    updated: Optional[datetime]
+    quantity: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    sellable_quantities: Optional[List[StrictInt]]
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "price", "notes", "inserted", "updated", "quantity", "sellable_quantities"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,6 +83,26 @@ class VividseatsAvailableSchema(BaseModel):
         if self.price is None and "price" in self.model_fields_set:
             _dict['price'] = None
 
+        # set to None if notes (nullable) is None
+        # and model_fields_set contains the field
+        if self.notes is None and "notes" in self.model_fields_set:
+            _dict['notes'] = None
+
+        # set to None if updated (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated is None and "updated" in self.model_fields_set:
+            _dict['updated'] = None
+
+        # set to None if quantity (nullable) is None
+        # and model_fields_set contains the field
+        if self.quantity is None and "quantity" in self.model_fields_set:
+            _dict['quantity'] = None
+
+        # set to None if sellable_quantities (nullable) is None
+        # and model_fields_set contains the field
+        if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
+            _dict['sellable_quantities'] = None
+
         return _dict
 
     @classmethod
@@ -90,12 +115,15 @@ class VividseatsAvailableSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "quantity": obj.get("quantity"),
-            "sellable_quantities": obj.get("sellable_quantities"),
             "place_id": obj.get("place_id"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "price": obj.get("price")
+            "price": obj.get("price"),
+            "notes": obj.get("notes"),
+            "inserted": obj.get("inserted"),
+            "updated": obj.get("updated"),
+            "quantity": obj.get("quantity"),
+            "sellable_quantities": obj.get("sellable_quantities")
         })
         return _obj
 

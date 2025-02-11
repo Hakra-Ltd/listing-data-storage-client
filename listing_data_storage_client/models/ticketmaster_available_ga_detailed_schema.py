@@ -17,23 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
-from listing_data_storage_client.models.evenue_single_change_schema import EvenueSingleChangeSchema
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueChangeSchema(BaseModel):
+class TicketmasterAvailableGaDetailedSchema(BaseModel):
     """
-    EvenueChangeSchema
+    TicketmasterAvailableGaDetailedSchema
     """ # noqa: E501
-    seat_number: StrictStr
-    seat_type: StrictStr
     place_id: StrictStr
     section: StrictStr
     row: StrictStr
-    changes: List[EvenueSingleChangeSchema]
-    __properties: ClassVar[List[str]] = ["seat_number", "seat_type", "place_id", "section", "row", "changes"]
+    count: Annotated[int, Field(strict=True, ge=0)]
+    attributes: List[StrictStr]
+    offer_name: Optional[StrictStr]
+    description: List[StrictStr]
+    inventory_type: Optional[StrictStr]
+    list_price: Optional[StrictStr]
+    total_price: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -53,7 +57,7 @@ class EvenueChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueChangeSchema from a JSON string"""
+        """Create an instance of TicketmasterAvailableGaDetailedSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,18 +78,31 @@ class EvenueChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in changes (list)
-        _items = []
-        if self.changes:
-            for _item_changes in self.changes:
-                if _item_changes:
-                    _items.append(_item_changes.to_dict())
-            _dict['changes'] = _items
+        # set to None if offer_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_name is None and "offer_name" in self.model_fields_set:
+            _dict['offer_name'] = None
+
+        # set to None if inventory_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.inventory_type is None and "inventory_type" in self.model_fields_set:
+            _dict['inventory_type'] = None
+
+        # set to None if list_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.list_price is None and "list_price" in self.model_fields_set:
+            _dict['list_price'] = None
+
+        # set to None if total_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.total_price is None and "total_price" in self.model_fields_set:
+            _dict['total_price'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueChangeSchema from a dict"""
+        """Create an instance of TicketmasterAvailableGaDetailedSchema from a dict"""
         if obj is None:
             return None
 
@@ -93,12 +110,16 @@ class EvenueChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "seat_number": obj.get("seat_number"),
-            "seat_type": obj.get("seat_type"),
             "place_id": obj.get("place_id"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "changes": [EvenueSingleChangeSchema.from_dict(_item) for _item in obj["changes"]] if obj.get("changes") is not None else None
+            "count": obj.get("count"),
+            "attributes": obj.get("attributes"),
+            "offer_name": obj.get("offer_name"),
+            "description": obj.get("description"),
+            "inventory_type": obj.get("inventory_type"),
+            "list_price": obj.get("list_price"),
+            "total_price": obj.get("total_price")
         })
         return _obj
 

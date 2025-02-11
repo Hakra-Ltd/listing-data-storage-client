@@ -31,7 +31,7 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
     section: StrictStr
     row: StrictStr
     row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
-    seat_number: Annotated[int, Field(strict=True, ge=0)]
+    seat_number: Optional[StrictStr]
     attributes: List[StrictStr]
     offer_name: Optional[StrictStr]
     description: List[StrictStr]
@@ -83,6 +83,11 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
         # and model_fields_set contains the field
         if self.row_rank is None and "row_rank" in self.model_fields_set:
             _dict['row_rank'] = None
+
+        # set to None if seat_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seat_number'] = None
 
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
