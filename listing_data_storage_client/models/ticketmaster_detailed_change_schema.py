@@ -17,23 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
-from listing_data_storage_client.models.evenue_single_change_schema import EvenueSingleChangeSchema
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
+from listing_data_storage_client.models.ticketmaster_single_change_schema import TicketmasterSingleChangeSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueChangeSchema(BaseModel):
+class TicketmasterDetailedChangeSchema(BaseModel):
     """
-    EvenueChangeSchema
+    TicketmasterDetailedChangeSchema
     """ # noqa: E501
-    seat_number: StrictStr
-    seat_type: StrictStr
     place_id: StrictStr
+    full_section: Optional[StrictStr]
     section: StrictStr
     row: StrictStr
-    changes: List[EvenueSingleChangeSchema]
-    __properties: ClassVar[List[str]] = ["seat_number", "seat_type", "place_id", "section", "row", "changes"]
+    changes: List[TicketmasterSingleChangeSchema]
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    seat_number: Optional[StrictStr]
+    attributes: List[StrictStr]
+    offer_name: Optional[StrictStr]
+    description: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "changes", "row_rank", "seat_number", "attributes", "offer_name", "description"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -53,7 +58,7 @@ class EvenueChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueChangeSchema from a JSON string"""
+        """Create an instance of TicketmasterDetailedChangeSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,11 +86,31 @@ class EvenueChangeSchema(BaseModel):
                 if _item_changes:
                     _items.append(_item_changes.to_dict())
             _dict['changes'] = _items
+        # set to None if full_section (nullable) is None
+        # and model_fields_set contains the field
+        if self.full_section is None and "full_section" in self.model_fields_set:
+            _dict['full_section'] = None
+
+        # set to None if row_rank (nullable) is None
+        # and model_fields_set contains the field
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['row_rank'] = None
+
+        # set to None if seat_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seat_number'] = None
+
+        # set to None if offer_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_name is None and "offer_name" in self.model_fields_set:
+            _dict['offer_name'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueChangeSchema from a dict"""
+        """Create an instance of TicketmasterDetailedChangeSchema from a dict"""
         if obj is None:
             return None
 
@@ -93,12 +118,16 @@ class EvenueChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "seat_number": obj.get("seat_number"),
-            "seat_type": obj.get("seat_type"),
             "place_id": obj.get("place_id"),
+            "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "changes": [EvenueSingleChangeSchema.from_dict(_item) for _item in obj["changes"]] if obj.get("changes") is not None else None
+            "changes": [TicketmasterSingleChangeSchema.from_dict(_item) for _item in obj["changes"]] if obj.get("changes") is not None else None,
+            "row_rank": obj.get("row_rank"),
+            "seat_number": obj.get("seat_number"),
+            "attributes": obj.get("attributes"),
+            "offer_name": obj.get("offer_name"),
+            "description": obj.get("description")
         })
         return _obj
 

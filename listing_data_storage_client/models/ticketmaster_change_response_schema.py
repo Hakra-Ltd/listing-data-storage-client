@@ -17,21 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
+from listing_data_storage_client.models.change_info import ChangeInfo
+from listing_data_storage_client.models.ticketmaster_detailed_change_schema import TicketmasterDetailedChangeSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SoldSectionStatsCountSchema(BaseModel):
+class TicketmasterChangeResponseSchema(BaseModel):
     """
-    SoldSectionStatsCountSchema
+    TicketmasterChangeResponseSchema
     """ # noqa: E501
-    section: StrictStr
-    row: Optional[StrictStr]
-    count: Annotated[int, Field(strict=True, ge=0)]
-    average_price: StrictStr
-    __properties: ClassVar[List[str]] = ["section", "row", "count", "average_price"]
+    info: ChangeInfo
+    change_data: Optional[List[TicketmasterDetailedChangeSchema]] = None
+    __properties: ClassVar[List[str]] = ["info", "change_data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +50,7 @@ class SoldSectionStatsCountSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SoldSectionStatsCountSchema from a JSON string"""
+        """Create an instance of TicketmasterChangeResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,16 +71,21 @@ class SoldSectionStatsCountSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if row (nullable) is None
-        # and model_fields_set contains the field
-        if self.row is None and "row" in self.model_fields_set:
-            _dict['row'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of info
+        if self.info:
+            _dict['info'] = self.info.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in change_data (list)
+        _items = []
+        if self.change_data:
+            for _item_change_data in self.change_data:
+                if _item_change_data:
+                    _items.append(_item_change_data.to_dict())
+            _dict['change_data'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SoldSectionStatsCountSchema from a dict"""
+        """Create an instance of TicketmasterChangeResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -89,10 +93,8 @@ class SoldSectionStatsCountSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "section": obj.get("section"),
-            "row": obj.get("row"),
-            "count": obj.get("count"),
-            "average_price": obj.get("average_price")
+            "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
+            "change_data": [TicketmasterDetailedChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
         })
         return _obj
 

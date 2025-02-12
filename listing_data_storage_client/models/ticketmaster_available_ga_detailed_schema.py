@@ -28,16 +28,17 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
     TicketmasterAvailableGaDetailedSchema
     """ # noqa: E501
     place_id: StrictStr
+    full_section: StrictStr
     section: StrictStr
     row: StrictStr
-    count: Annotated[int, Field(strict=True, ge=0)]
+    count: Optional[Annotated[int, Field(strict=True, ge=0)]]
     attributes: List[StrictStr]
     offer_name: Optional[StrictStr]
     description: List[StrictStr]
     inventory_type: Optional[StrictStr]
     list_price: Optional[StrictStr]
     total_price: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,6 +79,11 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if count (nullable) is None
+        # and model_fields_set contains the field
+        if self.count is None and "count" in self.model_fields_set:
+            _dict['count'] = None
+
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
@@ -111,6 +117,7 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
 
         _obj = cls.model_validate({
             "place_id": obj.get("place_id"),
+            "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
             "count": obj.get("count"),

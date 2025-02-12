@@ -18,20 +18,28 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TickemasterSoldGroupSchema(BaseModel):
+class TicketmasterNewInventoryGroupSchema(BaseModel):
     """
-    TickemasterSoldGroupSchema
+    TicketmasterNewInventoryGroupSchema
     """ # noqa: E501
-    seat_number: Optional[StrictStr] = None
-    place_id: StrictStr
-    price: Optional[StrictStr]
-    sold: datetime
-    __properties: ClassVar[List[str]] = ["seat_number", "place_id", "price", "sold"]
+    full_section: StrictStr
+    section: StrictStr
+    row: Optional[StrictStr]
+    seats: Dict[str, Any]
+    quantity: Annotated[int, Field(strict=True, ge=0)]
+    list_price: StrictStr
+    total_price: StrictStr
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    offer_name: Optional[StrictStr]
+    description: List[StrictStr]
+    added_time: datetime
+    __properties: ClassVar[List[str]] = ["full_section", "section", "row", "seats", "quantity", "list_price", "total_price", "row_rank", "offer_name", "description", "added_time"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +59,7 @@ class TickemasterSoldGroupSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TickemasterSoldGroupSchema from a JSON string"""
+        """Create an instance of TicketmasterNewInventoryGroupSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,21 +80,26 @@ class TickemasterSoldGroupSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if seat_number (nullable) is None
+        # set to None if row (nullable) is None
         # and model_fields_set contains the field
-        if self.seat_number is None and "seat_number" in self.model_fields_set:
-            _dict['seat_number'] = None
+        if self.row is None and "row" in self.model_fields_set:
+            _dict['row'] = None
 
-        # set to None if price (nullable) is None
+        # set to None if row_rank (nullable) is None
         # and model_fields_set contains the field
-        if self.price is None and "price" in self.model_fields_set:
-            _dict['price'] = None
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['row_rank'] = None
+
+        # set to None if offer_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_name is None and "offer_name" in self.model_fields_set:
+            _dict['offer_name'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TickemasterSoldGroupSchema from a dict"""
+        """Create an instance of TicketmasterNewInventoryGroupSchema from a dict"""
         if obj is None:
             return None
 
@@ -94,10 +107,17 @@ class TickemasterSoldGroupSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "seat_number": obj.get("seat_number"),
-            "place_id": obj.get("place_id"),
-            "price": obj.get("price"),
-            "sold": obj.get("sold")
+            "full_section": obj.get("full_section"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "seats": obj.get("seats"),
+            "quantity": obj.get("quantity"),
+            "list_price": obj.get("list_price"),
+            "total_price": obj.get("total_price"),
+            "row_rank": obj.get("row_rank"),
+            "offer_name": obj.get("offer_name"),
+            "description": obj.get("description"),
+            "added_time": obj.get("added_time")
         })
         return _obj
 
