@@ -17,29 +17,23 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictInt, StrictStr
-from typing import Any, Optional
+from typing import Any, List, Optional
 from typing_extensions import Annotated
 from listing_data_storage_client.models.available_section_stats_response_schema import AvailableSectionStatsResponseSchema
 from listing_data_storage_client.models.available_stats_count_response_schema import AvailableStatsCountResponseSchema
 from listing_data_storage_client.models.base_response_schema import BaseResponseSchema
 from listing_data_storage_client.models.listing_seat_store_request_schema import ListingSeatStoreRequestSchema
-from listing_data_storage_client.models.listing_venue_map_response_schema import ListingVenueMapResponseSchema
-from listing_data_storage_client.models.map_store_request_schema import MapStoreRequestSchema
 from listing_data_storage_client.models.seat_sold_response_schema import SeatSoldResponseSchema
 from listing_data_storage_client.models.sections_response_schema import SectionsResponseSchema
-from listing_data_storage_client.models.sold_section_stats_count_response_schema import SoldSectionStatsCountResponseSchema
 from listing_data_storage_client.models.sold_stats_count_response_schema import SoldStatsCountResponseSchema
-from listing_data_storage_client.models.stats_response_schema import StatsResponseSchema
-from listing_data_storage_client.models.tickemaster_change_response_schema import TickemasterChangeResponseSchema
+from listing_data_storage_client.models.ticketmaster_all_seats_response_schema import TicketmasterAllSeatsResponseSchema
 from listing_data_storage_client.models.ticketmaster_available_detailed_response_schema import TicketmasterAvailableDetailedResponseSchema
+from listing_data_storage_client.models.ticketmaster_available_detailed_with_update_response_schema import TicketmasterAvailableDetailedWithUpdateResponseSchema
 from listing_data_storage_client.models.ticketmaster_available_prices_response_schema import TicketmasterAvailablePricesResponseSchema
-from listing_data_storage_client.models.ticketmaster_available_response_schema import TicketmasterAvailableResponseSchema
-from listing_data_storage_client.models.ticketmaster_ga_sold_response_schema import TicketmasterGaSoldResponseSchema
-from listing_data_storage_client.models.ticketmaster_sold_group_response_schema import TicketmasterSoldGroupResponseSchema
-from listing_data_storage_client.models.ticketmaster_sold_section_response_schema import TicketmasterSoldSectionResponseSchema
+from listing_data_storage_client.models.ticketmaster_change_response_schema import TicketmasterChangeResponseSchema
+from listing_data_storage_client.models.ticketmaster_new_inventory_group_schema import TicketmasterNewInventoryGroupSchema
 from listing_data_storage_client.models.time_unit_enum import TimeUnitEnum
 from listing_data_storage_client.models.tracked_event_response_schema import TrackedEventResponseSchema
-from listing_data_storage_client.models.update_base_request_schema import UpdateBaseRequestSchema
 from listing_data_storage_client.models.update_request_schema import UpdateRequestSchema
 
 from listing_data_storage_client.api_client import ApiClient, RequestSerialized
@@ -61,9 +55,9 @@ class PrimaryApi:
 
 
     @validate_call
-    async def archive_listings_v0_primary_ticketmaster_archive_post(
+    async def delete_event_data_v0_primary_ticketmaster_event_id_delete(
         self,
-        update_request_schema: UpdateRequestSchema,
+        event_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -77,12 +71,12 @@ class PrimaryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> BaseResponseSchema:
-        """(Deprecated) Archive Listings
+        """Delete Event Data
 
-        Archive the listings for a single event.
+        Delete ALL data related to an event.
 
-        :param update_request_schema: (required)
-        :type update_request_schema: UpdateRequestSchema
+        :param event_id: (required)
+        :type event_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -104,10 +98,9 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/archive is deprecated.", DeprecationWarning)
 
-        _param = self._archive_listings_v0_primary_ticketmaster_archive_post_serialize(
-            update_request_schema=update_request_schema,
+        _param = self._delete_event_data_v0_primary_ticketmaster_event_id_delete_serialize(
+            event_id=event_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -130,9 +123,9 @@ class PrimaryApi:
 
 
     @validate_call
-    async def archive_listings_v0_primary_ticketmaster_archive_post_with_http_info(
+    async def delete_event_data_v0_primary_ticketmaster_event_id_delete_with_http_info(
         self,
-        update_request_schema: UpdateRequestSchema,
+        event_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -146,12 +139,12 @@ class PrimaryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[BaseResponseSchema]:
-        """(Deprecated) Archive Listings
+        """Delete Event Data
 
-        Archive the listings for a single event.
+        Delete ALL data related to an event.
 
-        :param update_request_schema: (required)
-        :type update_request_schema: UpdateRequestSchema
+        :param event_id: (required)
+        :type event_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -173,10 +166,9 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/archive is deprecated.", DeprecationWarning)
 
-        _param = self._archive_listings_v0_primary_ticketmaster_archive_post_serialize(
-            update_request_schema=update_request_schema,
+        _param = self._delete_event_data_v0_primary_ticketmaster_event_id_delete_serialize(
+            event_id=event_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -199,9 +191,9 @@ class PrimaryApi:
 
 
     @validate_call
-    async def archive_listings_v0_primary_ticketmaster_archive_post_without_preload_content(
+    async def delete_event_data_v0_primary_ticketmaster_event_id_delete_without_preload_content(
         self,
-        update_request_schema: UpdateRequestSchema,
+        event_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -215,12 +207,12 @@ class PrimaryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Archive Listings
+        """Delete Event Data
 
-        Archive the listings for a single event.
+        Delete ALL data related to an event.
 
-        :param update_request_schema: (required)
-        :type update_request_schema: UpdateRequestSchema
+        :param event_id: (required)
+        :type event_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -242,10 +234,9 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/archive is deprecated.", DeprecationWarning)
 
-        _param = self._archive_listings_v0_primary_ticketmaster_archive_post_serialize(
-            update_request_schema=update_request_schema,
+        _param = self._delete_event_data_v0_primary_ticketmaster_event_id_delete_serialize(
+            event_id=event_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -263,9 +254,9 @@ class PrimaryApi:
         return response_data.response
 
 
-    def _archive_listings_v0_primary_ticketmaster_archive_post_serialize(
+    def _delete_event_data_v0_primary_ticketmaster_event_id_delete_serialize(
         self,
-        update_request_schema,
+        event_id,
         _request_auth,
         _content_type,
         _headers,
@@ -285,12 +276,12 @@ class PrimaryApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if event_id is not None:
+            _path_params['event_id'] = event_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_request_schema is not None:
-            _body_params = update_request_schema
 
 
         # set the HTTP header `Accept`
@@ -301,19 +292,6 @@ class PrimaryApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -321,8 +299,8 @@ class PrimaryApi:
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/v0/primary/ticketmaster/archive',
+            method='DELETE',
+            resource_path='/v0/primary/ticketmaster/{event_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -339,9 +317,9 @@ class PrimaryApi:
 
 
     @validate_call
-    async def archive_map_v0_primary_ticketmaster_archive_map_post(
+    async def get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get(
         self,
-        update_base_request_schema: UpdateBaseRequestSchema,
+        event_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -354,13 +332,13 @@ class PrimaryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BaseResponseSchema:
-        """(Deprecated) Archive Map
+    ) -> TicketmasterAllSeatsResponseSchema:
+        """Get All Places
 
-        Archive the map.
+        Returns all of the currently available listings including resales for the selected event (detailed)
 
-        :param update_base_request_schema: (required)
-        :type update_base_request_schema: UpdateBaseRequestSchema
+        :param event_id: (required)
+        :type event_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -382,10 +360,9 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/archive/map is deprecated.", DeprecationWarning)
 
-        _param = self._archive_map_v0_primary_ticketmaster_archive_map_post_serialize(
-            update_base_request_schema=update_base_request_schema,
+        _param = self._get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get_serialize(
+            event_id=event_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -393,7 +370,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
+            '200': "TicketmasterAllSeatsResponseSchema",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -408,9 +385,9 @@ class PrimaryApi:
 
 
     @validate_call
-    async def archive_map_v0_primary_ticketmaster_archive_map_post_with_http_info(
+    async def get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get_with_http_info(
         self,
-        update_base_request_schema: UpdateBaseRequestSchema,
+        event_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -423,13 +400,13 @@ class PrimaryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BaseResponseSchema]:
-        """(Deprecated) Archive Map
+    ) -> ApiResponse[TicketmasterAllSeatsResponseSchema]:
+        """Get All Places
 
-        Archive the map.
+        Returns all of the currently available listings including resales for the selected event (detailed)
 
-        :param update_base_request_schema: (required)
-        :type update_base_request_schema: UpdateBaseRequestSchema
+        :param event_id: (required)
+        :type event_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -451,10 +428,9 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/archive/map is deprecated.", DeprecationWarning)
 
-        _param = self._archive_map_v0_primary_ticketmaster_archive_map_post_serialize(
-            update_base_request_schema=update_base_request_schema,
+        _param = self._get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get_serialize(
+            event_id=event_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -462,7 +438,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
+            '200': "TicketmasterAllSeatsResponseSchema",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -477,9 +453,9 @@ class PrimaryApi:
 
 
     @validate_call
-    async def archive_map_v0_primary_ticketmaster_archive_map_post_without_preload_content(
+    async def get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get_without_preload_content(
         self,
-        update_base_request_schema: UpdateBaseRequestSchema,
+        event_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -493,12 +469,12 @@ class PrimaryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Archive Map
+        """Get All Places
 
-        Archive the map.
+        Returns all of the currently available listings including resales for the selected event (detailed)
 
-        :param update_base_request_schema: (required)
-        :type update_base_request_schema: UpdateBaseRequestSchema
+        :param event_id: (required)
+        :type event_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -520,10 +496,9 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/archive/map is deprecated.", DeprecationWarning)
 
-        _param = self._archive_map_v0_primary_ticketmaster_archive_map_post_serialize(
-            update_base_request_schema=update_base_request_schema,
+        _param = self._get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get_serialize(
+            event_id=event_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -531,7 +506,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
+            '200': "TicketmasterAllSeatsResponseSchema",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -541,9 +516,9 @@ class PrimaryApi:
         return response_data.response
 
 
-    def _archive_map_v0_primary_ticketmaster_archive_map_post_serialize(
+    def _get_all_places_v0_primary_ticketmaster_event_id_available_detailed_v2_get_serialize(
         self,
-        update_base_request_schema,
+        event_id,
         _request_auth,
         _content_type,
         _headers,
@@ -563,12 +538,12 @@ class PrimaryApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if event_id is not None:
+            _path_params['eventId'] = event_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_base_request_schema is not None:
-            _body_params = update_base_request_schema
 
 
         # set the HTTP header `Accept`
@@ -579,19 +554,6 @@ class PrimaryApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -599,8 +561,8 @@ class PrimaryApi:
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/v0/primary/ticketmaster/archive/map',
+            method='GET',
+            resource_path='/v0/primary/ticketmaster/{eventId}/available-detailed-v2',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -620,6 +582,7 @@ class PrimaryApi:
     async def get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get(
         self,
         event_id: StrictStr,
+        full_section: Annotated[Optional[StrictStr], Field(description="Full section for filtering")] = None,
         section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
         row: Annotated[Optional[StrictStr], Field(description="Row for filtering")] = None,
         row_rank_min: Annotated[Optional[StrictInt], Field(description="Minimum row rank")] = None,
@@ -647,6 +610,8 @@ class PrimaryApi:
 
         :param event_id: (required)
         :type event_id: str
+        :param full_section: Full section for filtering
+        :type full_section: str
         :param section: Section for filtering
         :type section: str
         :param row: Row for filtering
@@ -687,6 +652,7 @@ class PrimaryApi:
 
         _param = self._get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get_serialize(
             event_id=event_id,
+            full_section=full_section,
             section=section,
             row=row,
             row_rank_min=row_rank_min,
@@ -720,6 +686,7 @@ class PrimaryApi:
     async def get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get_with_http_info(
         self,
         event_id: StrictStr,
+        full_section: Annotated[Optional[StrictStr], Field(description="Full section for filtering")] = None,
         section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
         row: Annotated[Optional[StrictStr], Field(description="Row for filtering")] = None,
         row_rank_min: Annotated[Optional[StrictInt], Field(description="Minimum row rank")] = None,
@@ -747,6 +714,8 @@ class PrimaryApi:
 
         :param event_id: (required)
         :type event_id: str
+        :param full_section: Full section for filtering
+        :type full_section: str
         :param section: Section for filtering
         :type section: str
         :param row: Row for filtering
@@ -787,6 +756,7 @@ class PrimaryApi:
 
         _param = self._get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get_serialize(
             event_id=event_id,
+            full_section=full_section,
             section=section,
             row=row,
             row_rank_min=row_rank_min,
@@ -820,6 +790,7 @@ class PrimaryApi:
     async def get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get_without_preload_content(
         self,
         event_id: StrictStr,
+        full_section: Annotated[Optional[StrictStr], Field(description="Full section for filtering")] = None,
         section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
         row: Annotated[Optional[StrictStr], Field(description="Row for filtering")] = None,
         row_rank_min: Annotated[Optional[StrictInt], Field(description="Minimum row rank")] = None,
@@ -847,6 +818,8 @@ class PrimaryApi:
 
         :param event_id: (required)
         :type event_id: str
+        :param full_section: Full section for filtering
+        :type full_section: str
         :param section: Section for filtering
         :type section: str
         :param row: Row for filtering
@@ -887,6 +860,7 @@ class PrimaryApi:
 
         _param = self._get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get_serialize(
             event_id=event_id,
+            full_section=full_section,
             section=section,
             row=row,
             row_rank_min=row_rank_min,
@@ -915,6 +889,7 @@ class PrimaryApi:
     def _get_available_detailed_v0_primary_ticketmaster_event_id_available_detailed_get_serialize(
         self,
         event_id,
+        full_section,
         section,
         row,
         row_rank_min,
@@ -945,6 +920,10 @@ class PrimaryApi:
         if event_id is not None:
             _path_params['eventId'] = event_id
         # process the query parameters
+        if full_section is not None:
+            
+            _query_params.append(('fullSection', full_section))
+            
         if section is not None:
             
             _query_params.append(('section', section))
@@ -999,6 +978,421 @@ class PrimaryApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/v0/primary/ticketmaster/{eventId}/available-detailed',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    async def get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get(
+        self,
+        event_id: StrictStr,
+        full_section: Annotated[Optional[StrictStr], Field(description="Full section for filtering")] = None,
+        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
+        row: Annotated[Optional[StrictStr], Field(description="Row for filtering")] = None,
+        row_rank_min: Annotated[Optional[StrictInt], Field(description="Minimum row rank")] = None,
+        row_rank_max: Annotated[Optional[StrictInt], Field(description="Maximum row rank")] = None,
+        total_price_min: Annotated[Optional[Any], Field(description="Minimum total price")] = None,
+        total_price_max: Annotated[Optional[Any], Field(description="Maximum total price")] = None,
+        list_price_min: Annotated[Optional[Any], Field(description="Minimum list price")] = None,
+        list_price_max: Annotated[Optional[Any], Field(description="Maximum list price")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> TicketmasterAvailableDetailedWithUpdateResponseSchema:
+        """Get Available Detailed With Update
+
+        Returns all of the currently available listings including resales for the selected event (detailed) with update
+
+        :param event_id: (required)
+        :type event_id: str
+        :param full_section: Full section for filtering
+        :type full_section: str
+        :param section: Section for filtering
+        :type section: str
+        :param row: Row for filtering
+        :type row: str
+        :param row_rank_min: Minimum row rank
+        :type row_rank_min: int
+        :param row_rank_max: Maximum row rank
+        :type row_rank_max: int
+        :param total_price_min: Minimum total price
+        :type total_price_min: Totalpricemin1
+        :param total_price_max: Maximum total price
+        :type total_price_max: Totalpricemax1
+        :param list_price_min: Minimum list price
+        :type list_price_min: Listpricemin1
+        :param list_price_max: Maximum list price
+        :type list_price_max: Listpricemax1
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get_serialize(
+            event_id=event_id,
+            full_section=full_section,
+            section=section,
+            row=row,
+            row_rank_min=row_rank_min,
+            row_rank_max=row_rank_max,
+            total_price_min=total_price_min,
+            total_price_max=total_price_max,
+            list_price_min=list_price_min,
+            list_price_max=list_price_max,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "TicketmasterAvailableDetailedWithUpdateResponseSchema",
+            '422': "HTTPValidationError",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get_with_http_info(
+        self,
+        event_id: StrictStr,
+        full_section: Annotated[Optional[StrictStr], Field(description="Full section for filtering")] = None,
+        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
+        row: Annotated[Optional[StrictStr], Field(description="Row for filtering")] = None,
+        row_rank_min: Annotated[Optional[StrictInt], Field(description="Minimum row rank")] = None,
+        row_rank_max: Annotated[Optional[StrictInt], Field(description="Maximum row rank")] = None,
+        total_price_min: Annotated[Optional[Any], Field(description="Minimum total price")] = None,
+        total_price_max: Annotated[Optional[Any], Field(description="Maximum total price")] = None,
+        list_price_min: Annotated[Optional[Any], Field(description="Minimum list price")] = None,
+        list_price_max: Annotated[Optional[Any], Field(description="Maximum list price")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[TicketmasterAvailableDetailedWithUpdateResponseSchema]:
+        """Get Available Detailed With Update
+
+        Returns all of the currently available listings including resales for the selected event (detailed) with update
+
+        :param event_id: (required)
+        :type event_id: str
+        :param full_section: Full section for filtering
+        :type full_section: str
+        :param section: Section for filtering
+        :type section: str
+        :param row: Row for filtering
+        :type row: str
+        :param row_rank_min: Minimum row rank
+        :type row_rank_min: int
+        :param row_rank_max: Maximum row rank
+        :type row_rank_max: int
+        :param total_price_min: Minimum total price
+        :type total_price_min: Totalpricemin1
+        :param total_price_max: Maximum total price
+        :type total_price_max: Totalpricemax1
+        :param list_price_min: Minimum list price
+        :type list_price_min: Listpricemin1
+        :param list_price_max: Maximum list price
+        :type list_price_max: Listpricemax1
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get_serialize(
+            event_id=event_id,
+            full_section=full_section,
+            section=section,
+            row=row,
+            row_rank_min=row_rank_min,
+            row_rank_max=row_rank_max,
+            total_price_min=total_price_min,
+            total_price_max=total_price_max,
+            list_price_min=list_price_min,
+            list_price_max=list_price_max,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "TicketmasterAvailableDetailedWithUpdateResponseSchema",
+            '422': "HTTPValidationError",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get_without_preload_content(
+        self,
+        event_id: StrictStr,
+        full_section: Annotated[Optional[StrictStr], Field(description="Full section for filtering")] = None,
+        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
+        row: Annotated[Optional[StrictStr], Field(description="Row for filtering")] = None,
+        row_rank_min: Annotated[Optional[StrictInt], Field(description="Minimum row rank")] = None,
+        row_rank_max: Annotated[Optional[StrictInt], Field(description="Maximum row rank")] = None,
+        total_price_min: Annotated[Optional[Any], Field(description="Minimum total price")] = None,
+        total_price_max: Annotated[Optional[Any], Field(description="Maximum total price")] = None,
+        list_price_min: Annotated[Optional[Any], Field(description="Minimum list price")] = None,
+        list_price_max: Annotated[Optional[Any], Field(description="Maximum list price")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get Available Detailed With Update
+
+        Returns all of the currently available listings including resales for the selected event (detailed) with update
+
+        :param event_id: (required)
+        :type event_id: str
+        :param full_section: Full section for filtering
+        :type full_section: str
+        :param section: Section for filtering
+        :type section: str
+        :param row: Row for filtering
+        :type row: str
+        :param row_rank_min: Minimum row rank
+        :type row_rank_min: int
+        :param row_rank_max: Maximum row rank
+        :type row_rank_max: int
+        :param total_price_min: Minimum total price
+        :type total_price_min: Totalpricemin1
+        :param total_price_max: Maximum total price
+        :type total_price_max: Totalpricemax1
+        :param list_price_min: Minimum list price
+        :type list_price_min: Listpricemin1
+        :param list_price_max: Maximum list price
+        :type list_price_max: Listpricemax1
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get_serialize(
+            event_id=event_id,
+            full_section=full_section,
+            section=section,
+            row=row,
+            row_rank_min=row_rank_min,
+            row_rank_max=row_rank_max,
+            total_price_min=total_price_min,
+            total_price_max=total_price_max,
+            list_price_min=list_price_min,
+            list_price_max=list_price_max,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "TicketmasterAvailableDetailedWithUpdateResponseSchema",
+            '422': "HTTPValidationError",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_available_detailed_with_update_v0_primary_ticketmaster_event_id_available_detailed_update_get_serialize(
+        self,
+        event_id,
+        full_section,
+        section,
+        row,
+        row_rank_min,
+        row_rank_max,
+        total_price_min,
+        total_price_max,
+        list_price_min,
+        list_price_max,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if event_id is not None:
+            _path_params['eventId'] = event_id
+        # process the query parameters
+        if full_section is not None:
+            
+            _query_params.append(('fullSection', full_section))
+            
+        if section is not None:
+            
+            _query_params.append(('section', section))
+            
+        if row is not None:
+            
+            _query_params.append(('row', row))
+            
+        if row_rank_min is not None:
+            
+            _query_params.append(('rowRankMin', row_rank_min))
+            
+        if row_rank_max is not None:
+            
+            _query_params.append(('rowRankMax', row_rank_max))
+            
+        if total_price_min is not None:
+            
+            _query_params.append(('totalPriceMin', total_price_min))
+            
+        if total_price_max is not None:
+            
+            _query_params.append(('totalPriceMax', total_price_max))
+            
+        if list_price_min is not None:
+            
+            _query_params.append(('listPriceMin', list_price_min))
+            
+        if list_price_max is not None:
+            
+            _query_params.append(('listPriceMax', list_price_max))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2PasswordBearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v0/primary/ticketmaster/{eventId}/available-detailed/update',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2219,310 +2613,12 @@ class PrimaryApi:
 
 
     @validate_call
-    async def get_available_v0_primary_ticketmaster_event_id_available_get(
-        self,
-        event_id: StrictStr,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TicketmasterAvailableResponseSchema:
-        """Get Available
-
-        Returns all of the currently available listings for the selected event
-
-        :param event_id: (required)
-        :type event_id: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_available_v0_primary_ticketmaster_event_id_available_get_serialize(
-            event_id=event_id,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterAvailableResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_available_v0_primary_ticketmaster_event_id_available_get_with_http_info(
-        self,
-        event_id: StrictStr,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TicketmasterAvailableResponseSchema]:
-        """Get Available
-
-        Returns all of the currently available listings for the selected event
-
-        :param event_id: (required)
-        :type event_id: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_available_v0_primary_ticketmaster_event_id_available_get_serialize(
-            event_id=event_id,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterAvailableResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_available_v0_primary_ticketmaster_event_id_available_get_without_preload_content(
-        self,
-        event_id: StrictStr,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Get Available
-
-        Returns all of the currently available listings for the selected event
-
-        :param event_id: (required)
-        :type event_id: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_available_v0_primary_ticketmaster_event_id_available_get_serialize(
-            event_id=event_id,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterAvailableResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_available_v0_primary_ticketmaster_event_id_available_get_serialize(
-        self,
-        event_id,
-        page,
-        limit,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if event_id is not None:
-            _path_params['eventId'] = event_id
-        # process the query parameters
-        if page is not None:
-            
-            _query_params.append(('page', page))
-            
-        if limit is not None:
-            
-            _query_params.append(('limit', limit))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/available',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     async def get_changes_v0_primary_ticketmaster_event_id_changes_get(
         self,
         event_id: StrictStr,
         start: StrictStr,
         end: StrictStr,
         section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2535,7 +2631,7 @@ class PrimaryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TickemasterChangeResponseSchema:
+    ) -> TicketmasterChangeResponseSchema:
         """Get Changes
 
         Returns changes for the selected event.
@@ -2548,10 +2644,6 @@ class PrimaryApi:
         :type end: str
         :param section: Section for filtering
         :type section: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2579,8 +2671,6 @@ class PrimaryApi:
             start=start,
             end=end,
             section=section,
-            page=page,
-            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2588,7 +2678,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TickemasterChangeResponseSchema",
+            '200': "TicketmasterChangeResponseSchema",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -2609,8 +2699,6 @@ class PrimaryApi:
         start: StrictStr,
         end: StrictStr,
         section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2623,7 +2711,7 @@ class PrimaryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TickemasterChangeResponseSchema]:
+    ) -> ApiResponse[TicketmasterChangeResponseSchema]:
         """Get Changes
 
         Returns changes for the selected event.
@@ -2636,10 +2724,6 @@ class PrimaryApi:
         :type end: str
         :param section: Section for filtering
         :type section: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2667,8 +2751,6 @@ class PrimaryApi:
             start=start,
             end=end,
             section=section,
-            page=page,
-            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2676,7 +2758,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TickemasterChangeResponseSchema",
+            '200': "TicketmasterChangeResponseSchema",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -2697,8 +2779,6 @@ class PrimaryApi:
         start: StrictStr,
         end: StrictStr,
         section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2724,10 +2804,6 @@ class PrimaryApi:
         :type end: str
         :param section: Section for filtering
         :type section: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2755,8 +2831,6 @@ class PrimaryApi:
             start=start,
             end=end,
             section=section,
-            page=page,
-            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2764,7 +2838,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TickemasterChangeResponseSchema",
+            '200': "TicketmasterChangeResponseSchema",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -2780,8 +2854,6 @@ class PrimaryApi:
         start,
         end,
         section,
-        page,
-        limit,
         _request_auth,
         _content_type,
         _headers,
@@ -2807,14 +2879,6 @@ class PrimaryApi:
         if section is not None:
             
             _query_params.append(('section', section))
-            
-        if page is not None:
-            
-            _query_params.append(('page', page))
-            
-        if limit is not None:
-            
-            _query_params.append(('limit', limit))
             
         if start is not None:
             
@@ -2862,10 +2926,11 @@ class PrimaryApi:
 
 
     @validate_call
-    async def get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get(
+    async def get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get(
         self,
         event_id: StrictStr,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
+        start: StrictStr,
+        end: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2878,15 +2943,17 @@ class PrimaryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TrackedEventResponseSchema:
-        """(Deprecated) Get Sale Tracked Days
+    ) -> List[TicketmasterNewInventoryGroupSchema]:
+        """Get New Inventory
 
-        Returns the first and last tracked sale datetime for the selected event.
+        Returns the first and last tracked datetime for the selected event.
 
         :param event_id: (required)
         :type event_id: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
+        :param start: (required)
+        :type start: str
+        :param end: (required)
+        :type end: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2908,11 +2975,11 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/stats/sale is deprecated.", DeprecationWarning)
 
-        _param = self._get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get_serialize(
+        _param = self._get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get_serialize(
             event_id=event_id,
-            sold_check=sold_check,
+            start=start,
+            end=end,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2920,7 +2987,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TrackedEventResponseSchema",
+            '200': "List[TicketmasterNewInventoryGroupSchema]",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -2935,10 +3002,11 @@ class PrimaryApi:
 
 
     @validate_call
-    async def get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get_with_http_info(
+    async def get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get_with_http_info(
         self,
         event_id: StrictStr,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
+        start: StrictStr,
+        end: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2951,15 +3019,17 @@ class PrimaryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TrackedEventResponseSchema]:
-        """(Deprecated) Get Sale Tracked Days
+    ) -> ApiResponse[List[TicketmasterNewInventoryGroupSchema]]:
+        """Get New Inventory
 
-        Returns the first and last tracked sale datetime for the selected event.
+        Returns the first and last tracked datetime for the selected event.
 
         :param event_id: (required)
         :type event_id: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
+        :param start: (required)
+        :type start: str
+        :param end: (required)
+        :type end: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2981,11 +3051,11 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/stats/sale is deprecated.", DeprecationWarning)
 
-        _param = self._get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get_serialize(
+        _param = self._get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get_serialize(
             event_id=event_id,
-            sold_check=sold_check,
+            start=start,
+            end=end,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2993,7 +3063,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TrackedEventResponseSchema",
+            '200': "List[TicketmasterNewInventoryGroupSchema]",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -3008,10 +3078,11 @@ class PrimaryApi:
 
 
     @validate_call
-    async def get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get_without_preload_content(
+    async def get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get_without_preload_content(
         self,
         event_id: StrictStr,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
+        start: StrictStr,
+        end: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3025,14 +3096,16 @@ class PrimaryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Get Sale Tracked Days
+        """Get New Inventory
 
-        Returns the first and last tracked sale datetime for the selected event.
+        Returns the first and last tracked datetime for the selected event.
 
         :param event_id: (required)
         :type event_id: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
+        :param start: (required)
+        :type start: str
+        :param end: (required)
+        :type end: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3054,11 +3127,11 @@ class PrimaryApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/stats/sale is deprecated.", DeprecationWarning)
 
-        _param = self._get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get_serialize(
+        _param = self._get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get_serialize(
             event_id=event_id,
-            sold_check=sold_check,
+            start=start,
+            end=end,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3066,7 +3139,7 @@ class PrimaryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TrackedEventResponseSchema",
+            '200': "List[TicketmasterNewInventoryGroupSchema]",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -3076,10 +3149,11 @@ class PrimaryApi:
         return response_data.response
 
 
-    def _get_sale_tracked_days_v0_primary_ticketmaster_event_id_stats_sale_get_serialize(
+    def _get_new_inventory_v0_primary_ticketmaster_event_id_new_inventory_get_serialize(
         self,
         event_id,
-        sold_check,
+        start,
+        end,
         _request_auth,
         _content_type,
         _headers,
@@ -3102,9 +3176,13 @@ class PrimaryApi:
         if event_id is not None:
             _path_params['eventId'] = event_id
         # process the query parameters
-        if sold_check is not None:
+        if start is not None:
             
-            _query_params.append(('soldCheck', sold_check))
+            _query_params.append(('start', start))
+            
+        if end is not None:
+            
+            _query_params.append(('end', end))
             
         # process the header parameters
         # process the form parameters
@@ -3127,7 +3205,7 @@ class PrimaryApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/stats/sale',
+            resource_path='/v0/primary/ticketmaster/{eventId}/new-inventory',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -3390,1389 +3468,6 @@ class PrimaryApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/v0/primary/ticketmaster/{eventId}/sections',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TicketmasterGaSoldResponseSchema:
-        """(Deprecated) Get Sold Ga Count
-
-        Returns the sold counts for ga the selected event
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/ga is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterGaSoldResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get_with_http_info(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TicketmasterGaSoldResponseSchema]:
-        """(Deprecated) Get Sold Ga Count
-
-        Returns the sold counts for ga the selected event
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/ga is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterGaSoldResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get_without_preload_content(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Sold Ga Count
-
-        Returns the sold counts for ga the selected event
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/ga is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterGaSoldResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_sold_ga_count_v0_primary_ticketmaster_event_id_sold_ga_get_serialize(
-        self,
-        event_id,
-        start,
-        end,
-        page,
-        limit,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if event_id is not None:
-            _path_params['eventId'] = event_id
-        # process the query parameters
-        if page is not None:
-            
-            _query_params.append(('page', page))
-            
-        if limit is not None:
-            
-            _query_params.append(('limit', limit))
-            
-        if start is not None:
-            
-            _query_params.append(('start', start))
-            
-        if end is not None:
-            
-            _query_params.append(('end', end))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/sold/ga',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TicketmasterSoldGroupResponseSchema:
-        """(Deprecated) Get Sold Group Tickets
-
-        Returns the sold listing for the selected event and timeframe grouped by section and row
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param section: Section for filtering
-        :type section: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/group is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            section=section,
-            sold_check=sold_check,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterSoldGroupResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get_with_http_info(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TicketmasterSoldGroupResponseSchema]:
-        """(Deprecated) Get Sold Group Tickets
-
-        Returns the sold listing for the selected event and timeframe grouped by section and row
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param section: Section for filtering
-        :type section: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/group is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            section=section,
-            sold_check=sold_check,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterSoldGroupResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get_without_preload_content(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Sold Group Tickets
-
-        Returns the sold listing for the selected event and timeframe grouped by section and row
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param section: Section for filtering
-        :type section: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/group is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            section=section,
-            sold_check=sold_check,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterSoldGroupResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_sold_group_tickets_v0_primary_ticketmaster_event_id_sold_group_get_serialize(
-        self,
-        event_id,
-        start,
-        end,
-        section,
-        sold_check,
-        page,
-        limit,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if event_id is not None:
-            _path_params['eventId'] = event_id
-        # process the query parameters
-        if section is not None:
-            
-            _query_params.append(('section', section))
-            
-        if sold_check is not None:
-            
-            _query_params.append(('soldCheck', sold_check))
-            
-        if page is not None:
-            
-            _query_params.append(('page', page))
-            
-        if limit is not None:
-            
-            _query_params.append(('limit', limit))
-            
-        if start is not None:
-            
-            _query_params.append(('start', start))
-            
-        if end is not None:
-            
-            _query_params.append(('end', end))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/sold/group',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> SoldSectionStatsCountResponseSchema:
-        """(Deprecated) Get Sold Section Stats
-
-        Returns the sold counts and average prices for the selected event and timeframe
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/stats/section is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            sold_check=sold_check,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SoldSectionStatsCountResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get_with_http_info(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SoldSectionStatsCountResponseSchema]:
-        """(Deprecated) Get Sold Section Stats
-
-        Returns the sold counts and average prices for the selected event and timeframe
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/stats/section is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            sold_check=sold_check,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SoldSectionStatsCountResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get_without_preload_content(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Sold Section Stats
-
-        Returns the sold counts and average prices for the selected event and timeframe
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/stats/section is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            sold_check=sold_check,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SoldSectionStatsCountResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_sold_section_stats_v0_primary_ticketmaster_event_id_sold_stats_section_get_serialize(
-        self,
-        event_id,
-        start,
-        end,
-        sold_check,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if event_id is not None:
-            _path_params['eventId'] = event_id
-        # process the query parameters
-        if sold_check is not None:
-            
-            _query_params.append(('soldCheck', sold_check))
-            
-        if start is not None:
-            
-            _query_params.append(('start', start))
-            
-        if end is not None:
-            
-            _query_params.append(('end', end))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/sold/stats/section',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TicketmasterSoldSectionResponseSchema:
-        """(Deprecated) Get Sold Section Tickets
-
-        Returns the sold section listing for the selected event and timeframe grouped by consecutive places
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param section: Section for filtering
-        :type section: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/section is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            section=section,
-            sold_check=sold_check,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterSoldSectionResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get_with_http_info(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TicketmasterSoldSectionResponseSchema]:
-        """(Deprecated) Get Sold Section Tickets
-
-        Returns the sold section listing for the selected event and timeframe grouped by consecutive places
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param section: Section for filtering
-        :type section: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/section is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            section=section,
-            sold_check=sold_check,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterSoldSectionResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get_without_preload_content(
-        self,
-        event_id: StrictStr,
-        start: StrictStr,
-        end: StrictStr,
-        section: Annotated[Optional[StrictStr], Field(description="Section for filtering")] = None,
-        sold_check: Annotated[Optional[StrictInt], Field(description="Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours")] = None,
-        page: Annotated[Optional[StrictInt], Field(description="Page")] = None,
-        limit: Annotated[Optional[StrictInt], Field(description="Limit")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Sold Section Tickets
-
-        Returns the sold section listing for the selected event and timeframe grouped by consecutive places
-
-        :param event_id: (required)
-        :type event_id: str
-        :param start: (required)
-        :type start: str
-        :param end: (required)
-        :type end: str
-        :param section: Section for filtering
-        :type section: str
-        :param sold_check: Ticket is considered sold if it wasn't updated in the last NOW() - {soldCheck} hours
-        :type sold_check: int
-        :param page: Page
-        :type page: int
-        :param limit: Limit
-        :type limit: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/{eventId}/sold/section is deprecated.", DeprecationWarning)
-
-        _param = self._get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get_serialize(
-            event_id=event_id,
-            start=start,
-            end=end,
-            section=section,
-            sold_check=sold_check,
-            page=page,
-            limit=limit,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TicketmasterSoldSectionResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_sold_section_tickets_v0_primary_ticketmaster_event_id_sold_section_get_serialize(
-        self,
-        event_id,
-        start,
-        end,
-        section,
-        sold_check,
-        page,
-        limit,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if event_id is not None:
-            _path_params['eventId'] = event_id
-        # process the query parameters
-        if section is not None:
-            
-            _query_params.append(('section', section))
-            
-        if sold_check is not None:
-            
-            _query_params.append(('soldCheck', sold_check))
-            
-        if page is not None:
-            
-            _query_params.append(('page', page))
-            
-        if limit is not None:
-            
-            _query_params.append(('limit', limit))
-            
-        if start is not None:
-            
-            _query_params.append(('start', start))
-            
-        if end is not None:
-            
-            _query_params.append(('end', end))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/sold/section',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -5483,268 +4178,6 @@ class PrimaryApi:
 
 
     @validate_call
-    async def get_stats_v0_primary_ticketmaster_event_id_stats_get(
-        self,
-        event_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> StatsResponseSchema:
-        """Get Stats
-
-        Returns availability statistic for the selected event.
-
-        :param event_id: (required)
-        :type event_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_stats_v0_primary_ticketmaster_event_id_stats_get_serialize(
-            event_id=event_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StatsResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_stats_v0_primary_ticketmaster_event_id_stats_get_with_http_info(
-        self,
-        event_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[StatsResponseSchema]:
-        """Get Stats
-
-        Returns availability statistic for the selected event.
-
-        :param event_id: (required)
-        :type event_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_stats_v0_primary_ticketmaster_event_id_stats_get_serialize(
-            event_id=event_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StatsResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_stats_v0_primary_ticketmaster_event_id_stats_get_without_preload_content(
-        self,
-        event_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Get Stats
-
-        Returns availability statistic for the selected event.
-
-        :param event_id: (required)
-        :type event_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_stats_v0_primary_ticketmaster_event_id_stats_get_serialize(
-            event_id=event_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StatsResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_stats_v0_primary_ticketmaster_event_id_stats_get_serialize(
-        self,
-        event_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if event_id is not None:
-            _path_params['eventId'] = event_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/{eventId}/stats',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     async def get_tracked_days_v0_primary_ticketmaster_event_id_stats_track_get(
         self,
         event_id: StrictStr,
@@ -5991,276 +4424,6 @@ class PrimaryApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/v0/primary/ticketmaster/{eventId}/stats/track',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def get_venue_map_v0_primary_ticketmaster_map_get(
-        self,
-        venue_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ListingVenueMapResponseSchema:
-        """(Deprecated) Get Venue Map
-
-        Get a venue map.
-
-        :param venue_id: (required)
-        :type venue_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/map is deprecated.", DeprecationWarning)
-
-        _param = self._get_venue_map_v0_primary_ticketmaster_map_get_serialize(
-            venue_id=venue_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ListingVenueMapResponseSchema",
-            '404': "NotFoundResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def get_venue_map_v0_primary_ticketmaster_map_get_with_http_info(
-        self,
-        venue_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ListingVenueMapResponseSchema]:
-        """(Deprecated) Get Venue Map
-
-        Get a venue map.
-
-        :param venue_id: (required)
-        :type venue_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/map is deprecated.", DeprecationWarning)
-
-        _param = self._get_venue_map_v0_primary_ticketmaster_map_get_serialize(
-            venue_id=venue_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ListingVenueMapResponseSchema",
-            '404': "NotFoundResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def get_venue_map_v0_primary_ticketmaster_map_get_without_preload_content(
-        self,
-        venue_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Venue Map
-
-        Get a venue map.
-
-        :param venue_id: (required)
-        :type venue_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /v0/primary/ticketmaster/map is deprecated.", DeprecationWarning)
-
-        _param = self._get_venue_map_v0_primary_ticketmaster_map_get_serialize(
-            venue_id=venue_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ListingVenueMapResponseSchema",
-            '404': "NotFoundResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_venue_map_v0_primary_ticketmaster_map_get_serialize(
-        self,
-        venue_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if venue_id is not None:
-            
-            _query_params.append(('venue_id', venue_id))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/v0/primary/ticketmaster/map',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -6552,284 +4715,6 @@ class PrimaryApi:
 
 
     @validate_call
-    async def store_venue_map_v0_primary_ticketmaster_map_post(
-        self,
-        map_store_request_schema: MapStoreRequestSchema,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BaseResponseSchema:
-        """(Deprecated) Store Venue Map
-
-        Store a venue map.
-
-        :param map_store_request_schema: (required)
-        :type map_store_request_schema: MapStoreRequestSchema
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/map is deprecated.", DeprecationWarning)
-
-        _param = self._store_venue_map_v0_primary_ticketmaster_map_post_serialize(
-            map_store_request_schema=map_store_request_schema,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def store_venue_map_v0_primary_ticketmaster_map_post_with_http_info(
-        self,
-        map_store_request_schema: MapStoreRequestSchema,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BaseResponseSchema]:
-        """(Deprecated) Store Venue Map
-
-        Store a venue map.
-
-        :param map_store_request_schema: (required)
-        :type map_store_request_schema: MapStoreRequestSchema
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/map is deprecated.", DeprecationWarning)
-
-        _param = self._store_venue_map_v0_primary_ticketmaster_map_post_serialize(
-            map_store_request_schema=map_store_request_schema,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def store_venue_map_v0_primary_ticketmaster_map_post_without_preload_content(
-        self,
-        map_store_request_schema: MapStoreRequestSchema,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Store Venue Map
-
-        Store a venue map.
-
-        :param map_store_request_schema: (required)
-        :type map_store_request_schema: MapStoreRequestSchema
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/map is deprecated.", DeprecationWarning)
-
-        _param = self._store_venue_map_v0_primary_ticketmaster_map_post_serialize(
-            map_store_request_schema=map_store_request_schema,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _store_venue_map_v0_primary_ticketmaster_map_post_serialize(
-        self,
-        map_store_request_schema,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if map_store_request_schema is not None:
-            _body_params = map_store_request_schema
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/v0/primary/ticketmaster/map',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     async def update_listings_v0_primary_ticketmaster_update_post(
         self,
         update_request_schema: UpdateRequestSchema,
@@ -7089,284 +4974,6 @@ class PrimaryApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v0/primary/ticketmaster/update',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def update_map_v0_primary_ticketmaster_update_map_post(
-        self,
-        update_base_request_schema: UpdateBaseRequestSchema,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BaseResponseSchema:
-        """(Deprecated) Update Map
-
-        Update the venue map.
-
-        :param update_base_request_schema: (required)
-        :type update_base_request_schema: UpdateBaseRequestSchema
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/update/map is deprecated.", DeprecationWarning)
-
-        _param = self._update_map_v0_primary_ticketmaster_update_map_post_serialize(
-            update_base_request_schema=update_base_request_schema,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def update_map_v0_primary_ticketmaster_update_map_post_with_http_info(
-        self,
-        update_base_request_schema: UpdateBaseRequestSchema,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BaseResponseSchema]:
-        """(Deprecated) Update Map
-
-        Update the venue map.
-
-        :param update_base_request_schema: (required)
-        :type update_base_request_schema: UpdateBaseRequestSchema
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/update/map is deprecated.", DeprecationWarning)
-
-        _param = self._update_map_v0_primary_ticketmaster_update_map_post_serialize(
-            update_base_request_schema=update_base_request_schema,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def update_map_v0_primary_ticketmaster_update_map_post_without_preload_content(
-        self,
-        update_base_request_schema: UpdateBaseRequestSchema,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Update Map
-
-        Update the venue map.
-
-        :param update_base_request_schema: (required)
-        :type update_base_request_schema: UpdateBaseRequestSchema
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /v0/primary/ticketmaster/update/map is deprecated.", DeprecationWarning)
-
-        _param = self._update_map_v0_primary_ticketmaster_update_map_post_serialize(
-            update_base_request_schema=update_base_request_schema,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BaseResponseSchema",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _update_map_v0_primary_ticketmaster_update_map_post_serialize(
-        self,
-        update_base_request_schema,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if update_base_request_schema is not None:
-            _body_params = update_base_request_schema
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2PasswordBearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/v0/primary/ticketmaster/update/map',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -19,20 +19,18 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.available_info import AvailableInfo
-from listing_data_storage_client.models.evenue_available_schema import EvenueAvailableSchema
-from listing_data_storage_client.models.pagination_schema import PaginationSchema
+from listing_data_storage_client.models.change_info import ChangeInfo
+from listing_data_storage_client.models.ticketmaster_detailed_change_schema import TicketmasterDetailedChangeSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueAvailableResponseSchema(BaseModel):
+class TicketmasterChangeResponseSchema(BaseModel):
     """
-    EvenueAvailableResponseSchema
+    TicketmasterChangeResponseSchema
     """ # noqa: E501
-    pagination: PaginationSchema
-    info: AvailableInfo
-    available_data: Optional[List[EvenueAvailableSchema]] = None
-    __properties: ClassVar[List[str]] = ["pagination", "info", "available_data"]
+    info: ChangeInfo
+    change_data: Optional[List[TicketmasterDetailedChangeSchema]] = None
+    __properties: ClassVar[List[str]] = ["info", "change_data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +50,7 @@ class EvenueAvailableResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueAvailableResponseSchema from a JSON string"""
+        """Create an instance of TicketmasterChangeResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,24 +71,21 @@ class EvenueAvailableResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of pagination
-        if self.pagination:
-            _dict['pagination'] = self.pagination.to_dict()
         # override the default output from pydantic by calling `to_dict()` of info
         if self.info:
             _dict['info'] = self.info.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in available_data (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in change_data (list)
         _items = []
-        if self.available_data:
-            for _item_available_data in self.available_data:
-                if _item_available_data:
-                    _items.append(_item_available_data.to_dict())
-            _dict['available_data'] = _items
+        if self.change_data:
+            for _item_change_data in self.change_data:
+                if _item_change_data:
+                    _items.append(_item_change_data.to_dict())
+            _dict['change_data'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueAvailableResponseSchema from a dict"""
+        """Create an instance of TicketmasterChangeResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -98,9 +93,8 @@ class EvenueAvailableResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "pagination": PaginationSchema.from_dict(obj["pagination"]) if obj.get("pagination") is not None else None,
-            "info": AvailableInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
-            "available_data": [EvenueAvailableSchema.from_dict(_item) for _item in obj["available_data"]] if obj.get("available_data") is not None else None
+            "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
+            "change_data": [TicketmasterDetailedChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
         })
         return _obj
 

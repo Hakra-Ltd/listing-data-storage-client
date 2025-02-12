@@ -17,21 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.ticketmaster_available_detailed_with_update_schema import TicketmasterAvailableDetailedWithUpdateSchema
+from listing_data_storage_client.models.ticketmaster_available_ga_detailed_with_update_schema import TicketmasterAvailableGaDetailedWithUpdateSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TickemasterSoldGroupSchema(BaseModel):
+class TicketmasterAvailableDetailedWithUpdateResponseSchema(BaseModel):
     """
-    TickemasterSoldGroupSchema
+    TicketmasterAvailableDetailedWithUpdateResponseSchema
     """ # noqa: E501
-    seat_number: Optional[StrictStr] = None
-    place_id: StrictStr
-    price: Optional[StrictStr]
-    sold: datetime
-    __properties: ClassVar[List[str]] = ["seat_number", "place_id", "price", "sold"]
+    available_places: Optional[List[TicketmasterAvailableDetailedWithUpdateSchema]] = None
+    available_ga_places: Optional[List[TicketmasterAvailableGaDetailedWithUpdateSchema]] = None
+    __properties: ClassVar[List[str]] = ["available_places", "available_ga_places"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +50,7 @@ class TickemasterSoldGroupSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TickemasterSoldGroupSchema from a JSON string"""
+        """Create an instance of TicketmasterAvailableDetailedWithUpdateResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,21 +71,25 @@ class TickemasterSoldGroupSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if seat_number (nullable) is None
-        # and model_fields_set contains the field
-        if self.seat_number is None and "seat_number" in self.model_fields_set:
-            _dict['seat_number'] = None
-
-        # set to None if price (nullable) is None
-        # and model_fields_set contains the field
-        if self.price is None and "price" in self.model_fields_set:
-            _dict['price'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in available_places (list)
+        _items = []
+        if self.available_places:
+            for _item_available_places in self.available_places:
+                if _item_available_places:
+                    _items.append(_item_available_places.to_dict())
+            _dict['available_places'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in available_ga_places (list)
+        _items = []
+        if self.available_ga_places:
+            for _item_available_ga_places in self.available_ga_places:
+                if _item_available_ga_places:
+                    _items.append(_item_available_ga_places.to_dict())
+            _dict['available_ga_places'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TickemasterSoldGroupSchema from a dict"""
+        """Create an instance of TicketmasterAvailableDetailedWithUpdateResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -94,10 +97,8 @@ class TickemasterSoldGroupSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "seat_number": obj.get("seat_number"),
-            "place_id": obj.get("place_id"),
-            "price": obj.get("price"),
-            "sold": obj.get("sold")
+            "available_places": [TicketmasterAvailableDetailedWithUpdateSchema.from_dict(_item) for _item in obj["available_places"]] if obj.get("available_places") is not None else None,
+            "available_ga_places": [TicketmasterAvailableGaDetailedWithUpdateSchema.from_dict(_item) for _item in obj["available_ga_places"]] if obj.get("available_ga_places") is not None else None
         })
         return _obj
 

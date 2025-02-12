@@ -17,21 +17,30 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SoldSectionStatsCountSchema(BaseModel):
+class TicketmasterNewInventoryGroupSchema(BaseModel):
     """
-    SoldSectionStatsCountSchema
+    TicketmasterNewInventoryGroupSchema
     """ # noqa: E501
+    full_section: StrictStr
     section: StrictStr
     row: Optional[StrictStr]
-    count: Annotated[int, Field(strict=True, ge=0)]
-    average_price: StrictStr
-    __properties: ClassVar[List[str]] = ["section", "row", "count", "average_price"]
+    seats: Dict[str, Any]
+    quantity: Annotated[int, Field(strict=True, ge=0)]
+    protected: Optional[StrictBool]
+    list_price: StrictStr
+    total_price: StrictStr
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    offer_name: Optional[StrictStr]
+    description: List[StrictStr]
+    added_time: datetime
+    __properties: ClassVar[List[str]] = ["full_section", "section", "row", "seats", "quantity", "protected", "list_price", "total_price", "row_rank", "offer_name", "description", "added_time"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +60,7 @@ class SoldSectionStatsCountSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SoldSectionStatsCountSchema from a JSON string"""
+        """Create an instance of TicketmasterNewInventoryGroupSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,11 +86,26 @@ class SoldSectionStatsCountSchema(BaseModel):
         if self.row is None and "row" in self.model_fields_set:
             _dict['row'] = None
 
+        # set to None if protected (nullable) is None
+        # and model_fields_set contains the field
+        if self.protected is None and "protected" in self.model_fields_set:
+            _dict['protected'] = None
+
+        # set to None if row_rank (nullable) is None
+        # and model_fields_set contains the field
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['row_rank'] = None
+
+        # set to None if offer_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_name is None and "offer_name" in self.model_fields_set:
+            _dict['offer_name'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SoldSectionStatsCountSchema from a dict"""
+        """Create an instance of TicketmasterNewInventoryGroupSchema from a dict"""
         if obj is None:
             return None
 
@@ -89,10 +113,18 @@ class SoldSectionStatsCountSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "count": obj.get("count"),
-            "average_price": obj.get("average_price")
+            "seats": obj.get("seats"),
+            "quantity": obj.get("quantity"),
+            "protected": obj.get("protected"),
+            "list_price": obj.get("list_price"),
+            "total_price": obj.get("total_price"),
+            "row_rank": obj.get("row_rank"),
+            "offer_name": obj.get("offer_name"),
+            "description": obj.get("description"),
+            "added_time": obj.get("added_time")
         })
         return _obj
 
