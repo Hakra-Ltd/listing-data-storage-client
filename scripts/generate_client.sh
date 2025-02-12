@@ -1,4 +1,7 @@
 #!/bin/bash
+# So far the script is only used for listing_data_storage_client,
+# in the future can be extended for other clients (package name is ignored for now)
+
 
 # Exit on any error
 set -e
@@ -37,13 +40,14 @@ echo "Package name: $name"
 echo "API IP: $name"
 echo "Branch name: $branch"
 
-# gitignore the dir
 mkdir -p "${SCRIPT_DIR}/temp/client"
 
 pushd "${SCRIPT_DIR}/temp/client" || exit
 
-# Download the openapi-generator-cli
-wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.9.0/openapi-generator-cli-7.9.0.jar -O "${SCRIPT_DIR}/temp/openapi-generator-cli.jar"
+# download api client generator if not present
+if ! test -f "${SCRIPT_DIR}/temp/openapi-generator-cli.jar"; then
+  wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.9.0/openapi-generator-cli-7.9.0.jar -O "${SCRIPT_DIR}/temp/openapi-generator-cli.jar"
+fi
 
 # Generate the client
 java -jar "${SCRIPT_DIR}/temp/openapi-generator-cli.jar" generate -g python -i http://0.0.0.0:8080/openapi.json --additional-properties=library=asyncio,packageName=listing_data_storage_client,tooling-extension=decimal
