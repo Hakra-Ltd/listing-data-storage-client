@@ -1,14 +1,12 @@
 #!/bin/bash
-# So far the script is only used for listing_data_storage_client,
-# in the future can be extended for other clients (package name is ignored for now)
-
 
 # Exit on any error
 set -e
 
 usage() {
     echo "Usage: $0 -n <package_name> --i <API server IP> -b <branch name>"
-    echo "Package name and IP required, branch name creates a branch before committing if passed"
+    echo "Package name and IP required, branch name (optional) creates a branch before committing if passed"
+    echo "Example: $0 -n listing_data_storage_client -i 0.0.0.0:8080"
     exit 1
 }
 
@@ -50,13 +48,13 @@ if ! test -f "${SCRIPT_DIR}/temp/openapi-generator-cli.jar"; then
 fi
 
 # Generate the client
-java -jar "${SCRIPT_DIR}/temp/openapi-generator-cli.jar" generate -g python -i http://0.0.0.0:8080/openapi.json --additional-properties=library=asyncio,packageName=listing_data_storage_client,tooling-extension=decimal
+java -jar "${SCRIPT_DIR}/temp/openapi-generator-cli.jar" generate -g python -i "http://${ip}/openapi.json" "--additional-properties=library=asyncio,packageName=${name},tooling-extension=decimal"
 
 popd || exit
 
 # Move the generated client to the correct location
-rm -rf "${SCRIPT_DIR}/../listing_data_storage_client/"
-mv "${SCRIPT_DIR}/temp/client/listing_data_storage_client" "${SCRIPT_DIR}/.."
+rm -rf "${SCRIPT_DIR}/../${name}/"
+mv "${SCRIPT_DIR}/temp/client/${name}" "${SCRIPT_DIR}/.."
 
 # Remove the temp directory
 rm -rf "${SCRIPT_DIR}/temp/client"
@@ -67,6 +65,6 @@ if [ -n "$branch" ]; then
 fi
 
 # set upstream
-git add "${SCRIPT_DIR}/../listing_data_storage_client"
+git add "${SCRIPT_DIR}/../${name}"
 
 git commit -m "Auto-update client"
