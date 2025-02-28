@@ -17,18 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
-from listing_data_storage_client.models.evenue_available_prices_schema import EvenueAvailablePricesSchema
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.price import Price
+from listing_data_storage_client.models.stubhub_update_item_schema import StubhubUpdateItemSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueAvailablePricesResponseSchema(BaseModel):
+class StubhubPriceStoreSchema(BaseModel):
     """
-    EvenueAvailablePricesResponseSchema
+    StubhubPriceStoreSchema
     """ # noqa: E501
-    prices: List[EvenueAvailablePricesSchema]
-    __properties: ClassVar[List[str]] = ["prices"]
+    place_id: StrictStr
+    price: Price
+    available_tickets: StrictInt
+    available_quantities: List[StrictInt]
+    ticket_class_name: Optional[StrictStr] = None
+    max_quantity: StrictInt
+    update_items: Optional[List[StubhubUpdateItemSchema]] = None
+    __properties: ClassVar[List[str]] = ["place_id", "price", "available_tickets", "available_quantities", "ticket_class_name", "max_quantity", "update_items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +55,7 @@ class EvenueAvailablePricesResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueAvailablePricesResponseSchema from a JSON string"""
+        """Create an instance of StubhubPriceStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,18 +76,24 @@ class EvenueAvailablePricesResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in prices (list)
-        _items = []
-        if self.prices:
-            for _item_prices in self.prices:
-                if _item_prices:
-                    _items.append(_item_prices.to_dict())
-            _dict['prices'] = _items
+        # override the default output from pydantic by calling `to_dict()` of price
+        if self.price:
+            _dict['price'] = self.price.to_dict()
+        # set to None if ticket_class_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.ticket_class_name is None and "ticket_class_name" in self.model_fields_set:
+            _dict['ticket_class_name'] = None
+
+        # set to None if update_items (nullable) is None
+        # and model_fields_set contains the field
+        if self.update_items is None and "update_items" in self.model_fields_set:
+            _dict['update_items'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueAvailablePricesResponseSchema from a dict"""
+        """Create an instance of StubhubPriceStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -88,7 +101,13 @@ class EvenueAvailablePricesResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "prices": [EvenueAvailablePricesSchema.from_dict(_item) for _item in obj["prices"]] if obj.get("prices") is not None else None
+            "place_id": obj.get("place_id"),
+            "price": Price.from_dict(obj["price"]) if obj.get("price") is not None else None,
+            "available_tickets": obj.get("available_tickets"),
+            "available_quantities": obj.get("available_quantities"),
+            "ticket_class_name": obj.get("ticket_class_name"),
+            "max_quantity": obj.get("max_quantity"),
+            "update_items": obj.get("update_items")
         })
         return _obj
 

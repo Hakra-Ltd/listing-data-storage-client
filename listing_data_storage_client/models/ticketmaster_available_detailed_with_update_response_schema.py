@@ -17,21 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.evenue_price_seat_store_schema import EvenuePriceSeatStoreSchema
+from listing_data_storage_client.models.ticketmaster_available_detailed_with_update_schema import TicketmasterAvailableDetailedWithUpdateSchema
+from listing_data_storage_client.models.ticketmaster_available_ga_detailed_with_update_schema import TicketmasterAvailableGaDetailedWithUpdateSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateEvenueSeatStoreSchema(BaseModel):
+class TicketmasterAvailableDetailedWithUpdateResponseSchema(BaseModel):
     """
-    UpdateEvenueSeatStoreSchema
+    TicketmasterAvailableDetailedWithUpdateResponseSchema
     """ # noqa: E501
-    add_place: List[EvenuePriceSeatStoreSchema] = Field(alias="addPlace")
-    remove_place: List[StrictStr] = Field(alias="removePlace")
-    update_place: List[EvenuePriceSeatStoreSchema] = Field(alias="updatePlace")
-    empty_event: Optional[StrictBool] = Field(default=False, alias="emptyEvent")
-    __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "emptyEvent"]
+    available_places: Optional[List[TicketmasterAvailableDetailedWithUpdateSchema]] = None
+    available_ga_places: Optional[List[TicketmasterAvailableGaDetailedWithUpdateSchema]] = None
+    __properties: ClassVar[List[str]] = ["available_places", "available_ga_places"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +50,7 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateEvenueSeatStoreSchema from a JSON string"""
+        """Create an instance of TicketmasterAvailableDetailedWithUpdateResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,25 +71,25 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in add_place (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in available_places (list)
         _items = []
-        if self.add_place:
-            for _item_add_place in self.add_place:
-                if _item_add_place:
-                    _items.append(_item_add_place.to_dict())
-            _dict['addPlace'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in update_place (list)
+        if self.available_places:
+            for _item_available_places in self.available_places:
+                if _item_available_places:
+                    _items.append(_item_available_places.to_dict())
+            _dict['available_places'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in available_ga_places (list)
         _items = []
-        if self.update_place:
-            for _item_update_place in self.update_place:
-                if _item_update_place:
-                    _items.append(_item_update_place.to_dict())
-            _dict['updatePlace'] = _items
+        if self.available_ga_places:
+            for _item_available_ga_places in self.available_ga_places:
+                if _item_available_ga_places:
+                    _items.append(_item_available_ga_places.to_dict())
+            _dict['available_ga_places'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateEvenueSeatStoreSchema from a dict"""
+        """Create an instance of TicketmasterAvailableDetailedWithUpdateResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -98,10 +97,8 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "addPlace": [EvenuePriceSeatStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
-            "removePlace": obj.get("removePlace"),
-            "updatePlace": [EvenuePriceSeatStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
-            "emptyEvent": obj.get("emptyEvent") if obj.get("emptyEvent") is not None else False
+            "available_places": [TicketmasterAvailableDetailedWithUpdateSchema.from_dict(_item) for _item in obj["available_places"]] if obj.get("available_places") is not None else None,
+            "available_ga_places": [TicketmasterAvailableGaDetailedWithUpdateSchema.from_dict(_item) for _item in obj["available_ga_places"]] if obj.get("available_ga_places") is not None else None
         })
         return _obj
 

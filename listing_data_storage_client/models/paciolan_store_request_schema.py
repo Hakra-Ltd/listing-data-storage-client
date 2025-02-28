@@ -20,24 +20,24 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.listing_seat_store_schema import ListingSeatStoreSchema
-from listing_data_storage_client.models.listings_ga_section_store_schema import ListingsGaSectionStoreSchema
-from listing_data_storage_client.models.update_listing_seat_store_schema import UpdateListingSeatStoreSchema
+from listing_data_storage_client.models.paciolan_ga_section_store_schema import PaciolanGaSectionStoreSchema
+from listing_data_storage_client.models.paciolan_seat_store_schema import PaciolanSeatStoreSchema
+from listing_data_storage_client.models.update_paciolan_seat_store_schema import UpdatePaciolanSeatStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ListingSeatStoreRequestSchema(BaseModel):
+class PaciolanStoreRequestSchema(BaseModel):
     """
-    ListingSeatStoreRequestSchema
+    PaciolanStoreRequestSchema
     """ # noqa: E501
     message_id: StrictStr = Field(alias="messageId")
     venue_id: StrictStr = Field(alias="venueId")
     event_id: StrictStr = Field(alias="eventId")
     event_timestamp: datetime = Field(alias="eventTimestamp")
     full_update: StrictBool = Field(alias="fullUpdate")
-    update: Optional[UpdateListingSeatStoreSchema] = None
-    seats: List[ListingSeatStoreSchema]
-    ga_section: Optional[List[ListingsGaSectionStoreSchema]] = None
+    update: Optional[UpdatePaciolanSeatStoreSchema] = None
+    seats: List[PaciolanSeatStoreSchema]
+    ga_section: Optional[List[PaciolanGaSectionStoreSchema]] = None
     __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "update", "seats", "ga_section"]
 
     model_config = ConfigDict(
@@ -58,7 +58,7 @@ class ListingSeatStoreRequestSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ListingSeatStoreRequestSchema from a JSON string"""
+        """Create an instance of PaciolanStoreRequestSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -110,7 +110,7 @@ class ListingSeatStoreRequestSchema(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ListingSeatStoreRequestSchema from a dict"""
+        """Create an instance of PaciolanStoreRequestSchema from a dict"""
         if obj is None:
             return None
 
@@ -123,9 +123,9 @@ class ListingSeatStoreRequestSchema(BaseModel):
             "eventId": obj.get("eventId"),
             "eventTimestamp": obj.get("eventTimestamp"),
             "fullUpdate": obj.get("fullUpdate"),
-            "update": UpdateListingSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
-            "seats": [ListingSeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
-            "ga_section": [ListingsGaSectionStoreSchema.from_dict(_item) for _item in obj["ga_section"]] if obj.get("ga_section") is not None else None
+            "update": UpdatePaciolanSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
+            "seats": [PaciolanSeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
+            "ga_section": [PaciolanGaSectionStoreSchema.from_dict(_item) for _item in obj["ga_section"]] if obj.get("ga_section") is not None else None
         })
         return _obj
 

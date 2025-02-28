@@ -17,25 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
-from listing_data_storage_client.models.seats import Seats
+from listing_data_storage_client.models.price import Price
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SeatSoldSchema(BaseModel):
+class StubhubStoreSchema(BaseModel):
     """
-    SeatSoldSchema
+    StubhubStoreSchema
     """ # noqa: E501
+    place_id: StrictStr
     section: StrictStr
-    row: Optional[StrictStr]
-    seats: Seats
-    quantity: Annotated[int, Field(strict=True, ge=0)]
-    sold_time: datetime
-    price: StrictStr
-    __properties: ClassVar[List[str]] = ["section", "row", "seats", "quantity", "sold_time", "price"]
+    row: Optional[StrictStr] = None
+    seat: Optional[StrictStr]
+    seat_from_internal: Optional[StrictStr]
+    available_tickets: StrictInt
+    available_quantities: List[StrictInt]
+    ticket_class_name: Optional[StrictStr] = None
+    notes: StrictStr
+    max_quantity: StrictInt
+    price: Price
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "seat", "seat_from_internal", "available_tickets", "available_quantities", "ticket_class_name", "notes", "max_quantity", "price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -55,7 +58,7 @@ class SeatSoldSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SeatSoldSchema from a JSON string"""
+        """Create an instance of StubhubStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,19 +79,34 @@ class SeatSoldSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of seats
-        if self.seats:
-            _dict['seats'] = self.seats.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of price
+        if self.price:
+            _dict['price'] = self.price.to_dict()
         # set to None if row (nullable) is None
         # and model_fields_set contains the field
         if self.row is None and "row" in self.model_fields_set:
             _dict['row'] = None
 
+        # set to None if seat (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat is None and "seat" in self.model_fields_set:
+            _dict['seat'] = None
+
+        # set to None if seat_from_internal (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_from_internal is None and "seat_from_internal" in self.model_fields_set:
+            _dict['seat_from_internal'] = None
+
+        # set to None if ticket_class_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.ticket_class_name is None and "ticket_class_name" in self.model_fields_set:
+            _dict['ticket_class_name'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SeatSoldSchema from a dict"""
+        """Create an instance of StubhubStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -96,12 +114,17 @@ class SeatSoldSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "place_id": obj.get("place_id"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "seats": Seats.from_dict(obj["seats"]) if obj.get("seats") is not None else None,
-            "quantity": obj.get("quantity"),
-            "sold_time": obj.get("sold_time"),
-            "price": obj.get("price")
+            "seat": obj.get("seat"),
+            "seat_from_internal": obj.get("seat_from_internal"),
+            "available_tickets": obj.get("available_tickets"),
+            "available_quantities": obj.get("available_quantities"),
+            "ticket_class_name": obj.get("ticket_class_name"),
+            "notes": obj.get("notes"),
+            "max_quantity": obj.get("max_quantity"),
+            "price": Price.from_dict(obj["price"]) if obj.get("price") is not None else None
         })
         return _obj
 

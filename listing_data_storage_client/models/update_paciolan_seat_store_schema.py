@@ -19,22 +19,20 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.listing_price_seat_store_schema import ListingPriceSeatStoreSchema
-from listing_data_storage_client.models.listings_resale import ListingsResale
+from listing_data_storage_client.models.paciolan_price_seat_store_schema import PaciolanPriceSeatStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateListingSeatStoreSchema(BaseModel):
+class UpdatePaciolanSeatStoreSchema(BaseModel):
     """
-    UpdateListingSeatStoreSchema
+    UpdatePaciolanSeatStoreSchema
     """ # noqa: E501
-    add_place: List[ListingPriceSeatStoreSchema] = Field(alias="addPlace")
+    add_place: List[PaciolanPriceSeatStoreSchema] = Field(alias="addPlace")
     remove_place: List[StrictStr] = Field(alias="removePlace")
-    update_place: List[ListingPriceSeatStoreSchema] = Field(alias="updatePlace")
-    update_info: List[StrictStr] = Field(alias="updateInfo")
+    update_place: List[PaciolanPriceSeatStoreSchema] = Field(alias="updatePlace")
+    update_info: Optional[List[Any]] = Field(default=None, alias="updateInfo")
     empty_event: Optional[StrictBool] = Field(default=False, alias="emptyEvent")
-    resale: Optional[ListingsResale] = None
-    __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "updateInfo", "emptyEvent", "resale"]
+    __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "updateInfo", "emptyEvent"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +52,7 @@ class UpdateListingSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateListingSeatStoreSchema from a JSON string"""
+        """Create an instance of UpdatePaciolanSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -89,19 +87,16 @@ class UpdateListingSeatStoreSchema(BaseModel):
                 if _item_update_place:
                     _items.append(_item_update_place.to_dict())
             _dict['updatePlace'] = _items
-        # override the default output from pydantic by calling `to_dict()` of resale
-        if self.resale:
-            _dict['resale'] = self.resale.to_dict()
-        # set to None if resale (nullable) is None
+        # set to None if update_info (nullable) is None
         # and model_fields_set contains the field
-        if self.resale is None and "resale" in self.model_fields_set:
-            _dict['resale'] = None
+        if self.update_info is None and "update_info" in self.model_fields_set:
+            _dict['updateInfo'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateListingSeatStoreSchema from a dict"""
+        """Create an instance of UpdatePaciolanSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -109,12 +104,11 @@ class UpdateListingSeatStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "addPlace": [ListingPriceSeatStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
+            "addPlace": [PaciolanPriceSeatStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
             "removePlace": obj.get("removePlace"),
-            "updatePlace": [ListingPriceSeatStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
+            "updatePlace": [PaciolanPriceSeatStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
             "updateInfo": obj.get("updateInfo"),
-            "emptyEvent": obj.get("emptyEvent") if obj.get("emptyEvent") is not None else False,
-            "resale": ListingsResale.from_dict(obj["resale"]) if obj.get("resale") is not None else None
+            "emptyEvent": obj.get("emptyEvent") if obj.get("emptyEvent") is not None else False
         })
         return _obj
 

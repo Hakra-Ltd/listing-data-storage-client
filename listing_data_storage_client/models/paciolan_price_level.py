@@ -33,9 +33,9 @@ from listing_data_storage_client.models.total_price import TotalPrice
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenuePriceLevel(BaseModel):
+class PaciolanPriceLevel(BaseModel):
     """
-    EvenuePriceLevel
+    PaciolanPriceLevel
     """ # noqa: E501
     price_level_id: StrictStr
     price_level_secname: StrictStr
@@ -70,7 +70,7 @@ class EvenuePriceLevel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenuePriceLevel from a JSON string"""
+        """Create an instance of PaciolanPriceLevel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -168,7 +168,7 @@ class EvenuePriceLevel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenuePriceLevel from a dict"""
+        """Create an instance of PaciolanPriceLevel from a dict"""
         if obj is None:
             return None
 

@@ -17,30 +17,36 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueAvailablePricesSchema(BaseModel):
+class PaciolanAvailableGaDetailedSchema(BaseModel):
     """
-    EvenueAvailablePricesSchema
+    PaciolanAvailableGaDetailedSchema
     """ # noqa: E501
-    price_level_id: StrictStr
-    price_level_secname: StrictStr
-    price_min: StrictStr
-    price_max: StrictStr
-    facility_fee_max: Optional[StrictStr]
+    place_id: StrictStr
+    section: StrictStr
+    row: StrictStr
+    seat_number: Optional[StrictStr]
+    event_id: StrictStr
+    seat_type: Optional[StrictStr]
+    price_level_secname: Optional[StrictStr]
+    price_min: Optional[StrictStr]
+    price_max: Optional[StrictStr]
     facility_fee_min: Optional[StrictStr]
+    facility_fee_max: Optional[StrictStr]
     facility_tiered_fee_min: Optional[StrictStr]
     facility_tiered_fee_max: Optional[StrictStr]
     per_ticket_fee_min: Optional[StrictStr]
     per_ticket_fee_max: Optional[StrictStr]
     per_ticket_fee_min_tiered: Optional[StrictStr]
     per_ticket_fee_max_tiered: Optional[StrictStr]
-    place_id: StrictStr
-    total_price: StrictStr
-    __properties: ClassVar[List[str]] = ["price_level_id", "price_level_secname", "price_min", "price_max", "facility_fee_max", "facility_fee_min", "facility_tiered_fee_min", "facility_tiered_fee_max", "per_ticket_fee_min", "per_ticket_fee_max", "per_ticket_fee_min_tiered", "per_ticket_fee_max_tiered", "place_id", "total_price"]
+    total_price: Optional[StrictStr]
+    inserted: datetime
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "seat_number", "event_id", "seat_type", "price_level_secname", "price_min", "price_max", "facility_fee_min", "facility_fee_max", "facility_tiered_fee_min", "facility_tiered_fee_max", "per_ticket_fee_min", "per_ticket_fee_max", "per_ticket_fee_min_tiered", "per_ticket_fee_max_tiered", "total_price", "inserted"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -60,7 +66,7 @@ class EvenueAvailablePricesSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueAvailablePricesSchema from a JSON string"""
+        """Create an instance of PaciolanAvailableGaDetailedSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,15 +87,40 @@ class EvenueAvailablePricesSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if facility_fee_max (nullable) is None
+        # set to None if seat_number (nullable) is None
         # and model_fields_set contains the field
-        if self.facility_fee_max is None and "facility_fee_max" in self.model_fields_set:
-            _dict['facility_fee_max'] = None
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seat_number'] = None
+
+        # set to None if seat_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_type is None and "seat_type" in self.model_fields_set:
+            _dict['seat_type'] = None
+
+        # set to None if price_level_secname (nullable) is None
+        # and model_fields_set contains the field
+        if self.price_level_secname is None and "price_level_secname" in self.model_fields_set:
+            _dict['price_level_secname'] = None
+
+        # set to None if price_min (nullable) is None
+        # and model_fields_set contains the field
+        if self.price_min is None and "price_min" in self.model_fields_set:
+            _dict['price_min'] = None
+
+        # set to None if price_max (nullable) is None
+        # and model_fields_set contains the field
+        if self.price_max is None and "price_max" in self.model_fields_set:
+            _dict['price_max'] = None
 
         # set to None if facility_fee_min (nullable) is None
         # and model_fields_set contains the field
         if self.facility_fee_min is None and "facility_fee_min" in self.model_fields_set:
             _dict['facility_fee_min'] = None
+
+        # set to None if facility_fee_max (nullable) is None
+        # and model_fields_set contains the field
+        if self.facility_fee_max is None and "facility_fee_max" in self.model_fields_set:
+            _dict['facility_fee_max'] = None
 
         # set to None if facility_tiered_fee_min (nullable) is None
         # and model_fields_set contains the field
@@ -121,11 +152,16 @@ class EvenueAvailablePricesSchema(BaseModel):
         if self.per_ticket_fee_max_tiered is None and "per_ticket_fee_max_tiered" in self.model_fields_set:
             _dict['per_ticket_fee_max_tiered'] = None
 
+        # set to None if total_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.total_price is None and "total_price" in self.model_fields_set:
+            _dict['total_price'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueAvailablePricesSchema from a dict"""
+        """Create an instance of PaciolanAvailableGaDetailedSchema from a dict"""
         if obj is None:
             return None
 
@@ -133,20 +169,25 @@ class EvenueAvailablePricesSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "price_level_id": obj.get("price_level_id"),
+            "place_id": obj.get("place_id"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "seat_number": obj.get("seat_number"),
+            "event_id": obj.get("event_id"),
+            "seat_type": obj.get("seat_type"),
             "price_level_secname": obj.get("price_level_secname"),
             "price_min": obj.get("price_min"),
             "price_max": obj.get("price_max"),
-            "facility_fee_max": obj.get("facility_fee_max"),
             "facility_fee_min": obj.get("facility_fee_min"),
+            "facility_fee_max": obj.get("facility_fee_max"),
             "facility_tiered_fee_min": obj.get("facility_tiered_fee_min"),
             "facility_tiered_fee_max": obj.get("facility_tiered_fee_max"),
             "per_ticket_fee_min": obj.get("per_ticket_fee_min"),
             "per_ticket_fee_max": obj.get("per_ticket_fee_max"),
             "per_ticket_fee_min_tiered": obj.get("per_ticket_fee_min_tiered"),
             "per_ticket_fee_max_tiered": obj.get("per_ticket_fee_max_tiered"),
-            "place_id": obj.get("place_id"),
-            "total_price": obj.get("total_price")
+            "total_price": obj.get("total_price"),
+            "inserted": obj.get("inserted")
         })
         return _obj
 

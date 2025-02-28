@@ -20,25 +20,23 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.evenue_ga_section_store_schema import EvenueGaSectionStoreSchema
-from listing_data_storage_client.models.evenue_seat_store_schema import EvenueSeatStoreSchema
-from listing_data_storage_client.models.update_evenue_seat_store_schema import UpdateEvenueSeatStoreSchema
+from listing_data_storage_client.models.tickpick_store_schema import TickpickStoreSchema
+from listing_data_storage_client.models.tickpick_update_seat_store_schema import TickpickUpdateSeatStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueStoreRequestSchema(BaseModel):
+class TickpickStoreRequestSchema(BaseModel):
     """
-    EvenueStoreRequestSchema
+    TickpickStoreRequestSchema
     """ # noqa: E501
     message_id: StrictStr = Field(alias="messageId")
     venue_id: StrictStr = Field(alias="venueId")
     event_id: StrictStr = Field(alias="eventId")
     event_timestamp: datetime = Field(alias="eventTimestamp")
     full_update: StrictBool = Field(alias="fullUpdate")
-    seats: List[EvenueSeatStoreSchema]
-    update: Optional[UpdateEvenueSeatStoreSchema] = None
-    ga_section: Optional[List[EvenueGaSectionStoreSchema]] = None
-    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "seats", "update", "ga_section"]
+    update: Optional[TickpickUpdateSeatStoreSchema] = None
+    seats: List[TickpickStoreSchema]
+    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "update", "seats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -58,7 +56,7 @@ class EvenueStoreRequestSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueStoreRequestSchema from a JSON string"""
+        """Create an instance of TickpickStoreRequestSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,6 +77,9 @@ class EvenueStoreRequestSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of update
+        if self.update:
+            _dict['update'] = self.update.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in seats (list)
         _items = []
         if self.seats:
@@ -86,31 +87,16 @@ class EvenueStoreRequestSchema(BaseModel):
                 if _item_seats:
                     _items.append(_item_seats.to_dict())
             _dict['seats'] = _items
-        # override the default output from pydantic by calling `to_dict()` of update
-        if self.update:
-            _dict['update'] = self.update.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in ga_section (list)
-        _items = []
-        if self.ga_section:
-            for _item_ga_section in self.ga_section:
-                if _item_ga_section:
-                    _items.append(_item_ga_section.to_dict())
-            _dict['ga_section'] = _items
         # set to None if update (nullable) is None
         # and model_fields_set contains the field
         if self.update is None and "update" in self.model_fields_set:
             _dict['update'] = None
 
-        # set to None if ga_section (nullable) is None
-        # and model_fields_set contains the field
-        if self.ga_section is None and "ga_section" in self.model_fields_set:
-            _dict['ga_section'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueStoreRequestSchema from a dict"""
+        """Create an instance of TickpickStoreRequestSchema from a dict"""
         if obj is None:
             return None
 
@@ -123,9 +109,8 @@ class EvenueStoreRequestSchema(BaseModel):
             "eventId": obj.get("eventId"),
             "eventTimestamp": obj.get("eventTimestamp"),
             "fullUpdate": obj.get("fullUpdate"),
-            "seats": [EvenueSeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
-            "update": UpdateEvenueSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
-            "ga_section": [EvenueGaSectionStoreSchema.from_dict(_item) for _item in obj["ga_section"]] if obj.get("ga_section") is not None else None
+            "update": TickpickUpdateSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
+            "seats": [TickpickStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None
         })
         return _obj
 

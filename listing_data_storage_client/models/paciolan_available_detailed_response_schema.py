@@ -17,18 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.paciolan_available_detailed_schema import PaciolanAvailableDetailedSchema
+from listing_data_storage_client.models.paciolan_available_ga_detailed_schema import PaciolanAvailableGaDetailedSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class PaciolanAvailableDetailedResponseSchema(BaseModel):
     """
-    SingleChangeSchema
+    PaciolanAvailableDetailedResponseSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    available_places: Optional[List[PaciolanAvailableDetailedSchema]] = None
+    available_ga_places: Optional[List[PaciolanAvailableGaDetailedSchema]] = None
+    __properties: ClassVar[List[str]] = ["available_places", "available_ga_places"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of PaciolanAvailableDetailedResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +71,25 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in available_places (list)
+        _items = []
+        if self.available_places:
+            for _item_available_places in self.available_places:
+                if _item_available_places:
+                    _items.append(_item_available_places.to_dict())
+            _dict['available_places'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in available_ga_places (list)
+        _items = []
+        if self.available_ga_places:
+            for _item_available_ga_places in self.available_ga_places:
+                if _item_available_ga_places:
+                    _items.append(_item_available_ga_places.to_dict())
+            _dict['available_ga_places'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of PaciolanAvailableDetailedResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +97,8 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "available_places": [PaciolanAvailableDetailedSchema.from_dict(_item) for _item in obj["available_places"]] if obj.get("available_places") is not None else None,
+            "available_ga_places": [PaciolanAvailableGaDetailedSchema.from_dict(_item) for _item in obj["available_ga_places"]] if obj.get("available_ga_places") is not None else None
         })
         return _obj
 

@@ -17,18 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.paciolan_price_level import PaciolanPriceLevel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class PaciolanPriceSeatStoreSchema(BaseModel):
     """
-    SingleChangeSchema
+    PaciolanPriceSeatStoreSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    place_id: StrictStr = Field(alias="placeId")
+    price_level: PaciolanPriceLevel
+    update_items: Optional[List[StrictStr]] = Field(default=None, alias="updateItems")
+    __properties: ClassVar[List[str]] = ["placeId", "price_level", "updateItems"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of PaciolanPriceSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +71,19 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of price_level
+        if self.price_level:
+            _dict['price_level'] = self.price_level.to_dict()
+        # set to None if update_items (nullable) is None
+        # and model_fields_set contains the field
+        if self.update_items is None and "update_items" in self.model_fields_set:
+            _dict['updateItems'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of PaciolanPriceSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +91,9 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "placeId": obj.get("placeId"),
+            "price_level": PaciolanPriceLevel.from_dict(obj["price_level"]) if obj.get("price_level") is not None else None,
+            "updateItems": obj.get("updateItems")
         })
         return _obj
 

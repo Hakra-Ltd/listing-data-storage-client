@@ -17,18 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
+from listing_data_storage_client.models.paciolan_price_level import PaciolanPriceLevel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class PaciolanSeatStoreSchema(BaseModel):
     """
-    SingleChangeSchema
+    PaciolanSeatStoreSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    place_id: StrictStr
+    section: StrictStr
+    row: StrictStr
+    seat_number: StrictStr
+    seat_type: StrictStr
+    price_level: PaciolanPriceLevel
+    event_id: StrictStr
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "seat_number", "seat_type", "price_level", "event_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +54,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of PaciolanSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +75,14 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of price_level
+        if self.price_level:
+            _dict['price_level'] = self.price_level.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of PaciolanSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +90,13 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "place_id": obj.get("place_id"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "seat_number": obj.get("seat_number"),
+            "seat_type": obj.get("seat_type"),
+            "price_level": PaciolanPriceLevel.from_dict(obj["price_level"]) if obj.get("price_level") is not None else None,
+            "event_id": obj.get("event_id")
         })
         return _obj
 

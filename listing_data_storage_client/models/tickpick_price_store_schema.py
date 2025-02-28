@@ -17,20 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.evenue_price_level import EvenuePriceLevel
+from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from listing_data_storage_client.models.tickpick_update_item_schema import TickpickUpdateItemSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenuePriceSeatStoreSchema(BaseModel):
+class TickpickPriceStoreSchema(BaseModel):
     """
-    EvenuePriceSeatStoreSchema
+    TickpickPriceStoreSchema
     """ # noqa: E501
-    place_id: StrictStr = Field(alias="placeId")
-    price_level: EvenuePriceLevel
-    update_items: Optional[List[StrictStr]] = Field(default=None, alias="updateItems")
-    __properties: ClassVar[List[str]] = ["placeId", "price_level", "updateItems"]
+    place_id: StrictStr
+    price: Union[StrictFloat, StrictInt]
+    subtotal_value: Optional[Union[StrictFloat, StrictInt]] = None
+    displayed_value: Optional[Union[StrictFloat, StrictInt]] = None
+    face_value: Optional[Union[StrictFloat, StrictInt]] = None
+    quantity: StrictInt
+    update_items: Optional[List[TickpickUpdateItemSchema]] = None
+    __properties: ClassVar[List[str]] = ["place_id", "price", "subtotal_value", "displayed_value", "face_value", "quantity", "update_items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +54,7 @@ class EvenuePriceSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenuePriceSeatStoreSchema from a JSON string"""
+        """Create an instance of TickpickPriceStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,19 +75,31 @@ class EvenuePriceSeatStoreSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of price_level
-        if self.price_level:
-            _dict['price_level'] = self.price_level.to_dict()
+        # set to None if subtotal_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.subtotal_value is None and "subtotal_value" in self.model_fields_set:
+            _dict['subtotal_value'] = None
+
+        # set to None if displayed_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.displayed_value is None and "displayed_value" in self.model_fields_set:
+            _dict['displayed_value'] = None
+
+        # set to None if face_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.face_value is None and "face_value" in self.model_fields_set:
+            _dict['face_value'] = None
+
         # set to None if update_items (nullable) is None
         # and model_fields_set contains the field
         if self.update_items is None and "update_items" in self.model_fields_set:
-            _dict['updateItems'] = None
+            _dict['update_items'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenuePriceSeatStoreSchema from a dict"""
+        """Create an instance of TickpickPriceStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -91,9 +107,13 @@ class EvenuePriceSeatStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "placeId": obj.get("placeId"),
-            "price_level": EvenuePriceLevel.from_dict(obj["price_level"]) if obj.get("price_level") is not None else None,
-            "updateItems": obj.get("updateItems")
+            "place_id": obj.get("place_id"),
+            "price": obj.get("price"),
+            "subtotal_value": obj.get("subtotal_value"),
+            "displayed_value": obj.get("displayed_value"),
+            "face_value": obj.get("face_value"),
+            "quantity": obj.get("quantity"),
+            "update_items": obj.get("update_items")
         })
         return _obj
 

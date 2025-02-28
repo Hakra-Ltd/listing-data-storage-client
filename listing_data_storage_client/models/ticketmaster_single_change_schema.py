@@ -17,19 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
-from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EvenueGaSectionStoreSchema(BaseModel):
+class TicketmasterSingleChangeSchema(BaseModel):
     """
-    EvenueGaSectionStoreSchema
+    TicketmasterSingleChangeSchema
     """ # noqa: E501
-    section: StrictStr
-    current_count: Annotated[int, Field(strict=True, ge=0)] = Field(alias="currentCount")
-    __properties: ClassVar[List[str]] = ["section", "currentCount"]
+    updated: datetime
+    previous_list_price: StrictStr
+    new_list_price: StrictStr
+    previous_total_price: StrictStr
+    new_total_price: StrictStr
+    __properties: ClassVar[List[str]] = ["updated", "previous_list_price", "new_list_price", "previous_total_price", "new_total_price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +52,7 @@ class EvenueGaSectionStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EvenueGaSectionStoreSchema from a JSON string"""
+        """Create an instance of TicketmasterSingleChangeSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +77,7 @@ class EvenueGaSectionStoreSchema(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EvenueGaSectionStoreSchema from a dict"""
+        """Create an instance of TicketmasterSingleChangeSchema from a dict"""
         if obj is None:
             return None
 
@@ -82,8 +85,11 @@ class EvenueGaSectionStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "section": obj.get("section"),
-            "currentCount": obj.get("currentCount")
+            "updated": obj.get("updated"),
+            "previous_list_price": obj.get("previous_list_price"),
+            "new_list_price": obj.get("new_list_price"),
+            "previous_total_price": obj.get("previous_total_price"),
+            "new_total_price": obj.get("new_total_price")
         })
         return _obj
 
