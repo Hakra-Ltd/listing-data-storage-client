@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from listing_data_storage_client.models.listprice import Listprice
@@ -30,6 +30,7 @@ class ListingSeatStoreSchema(BaseModel):
     The individual seat and or section if it is GA model.
     """ # noqa: E501
     place_id: StrictStr = Field(alias="placeId")
+    full_section: StrictStr = Field(alias="fullSection")
     section: StrictStr
     row: StrictStr
     seat_number: Optional[StrictStr] = Field(alias="seatNumber")
@@ -38,11 +39,14 @@ class ListingSeatStoreSchema(BaseModel):
     list_price: Optional[Listprice] = Field(default=None, alias="listPrice")
     total_price: Optional[Totalprice] = Field(default=None, alias="totalPrice")
     attributes: Optional[List[StrictStr]] = None
+    offer_id: Optional[StrictStr] = Field(alias="offerId")
     offer_name: Optional[StrictStr] = Field(alias="offerName")
+    sellable_quantities: Optional[List[StrictInt]] = Field(default=None, alias="sellableQuantities")
+    protected: Optional[StrictBool]
     description: Optional[List[StrictStr]] = None
     inventory_type: Optional[StrictStr] = Field(alias="inventoryType")
     offer_type: Optional[StrictStr] = Field(alias="offerType")
-    __properties: ClassVar[List[str]] = ["placeId", "section", "row", "seatNumber", "rowRank", "count", "listPrice", "totalPrice", "attributes", "offerName", "description", "inventoryType", "offerType"]
+    __properties: ClassVar[List[str]] = ["placeId", "fullSection", "section", "row", "seatNumber", "rowRank", "count", "listPrice", "totalPrice", "attributes", "offerId", "offerName", "sellableQuantities", "protected", "description", "inventoryType", "offerType"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -109,10 +113,25 @@ class ListingSeatStoreSchema(BaseModel):
         if self.total_price is None and "total_price" in self.model_fields_set:
             _dict['totalPrice'] = None
 
+        # set to None if offer_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_id is None and "offer_id" in self.model_fields_set:
+            _dict['offerId'] = None
+
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
             _dict['offerName'] = None
+
+        # set to None if sellable_quantities (nullable) is None
+        # and model_fields_set contains the field
+        if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
+            _dict['sellableQuantities'] = None
+
+        # set to None if protected (nullable) is None
+        # and model_fields_set contains the field
+        if self.protected is None and "protected" in self.model_fields_set:
+            _dict['protected'] = None
 
         # set to None if inventory_type (nullable) is None
         # and model_fields_set contains the field
@@ -137,6 +156,7 @@ class ListingSeatStoreSchema(BaseModel):
 
         _obj = cls.model_validate({
             "placeId": obj.get("placeId"),
+            "fullSection": obj.get("fullSection"),
             "section": obj.get("section"),
             "row": obj.get("row"),
             "seatNumber": obj.get("seatNumber"),
@@ -145,7 +165,10 @@ class ListingSeatStoreSchema(BaseModel):
             "listPrice": Listprice.from_dict(obj["listPrice"]) if obj.get("listPrice") is not None else None,
             "totalPrice": Totalprice.from_dict(obj["totalPrice"]) if obj.get("totalPrice") is not None else None,
             "attributes": obj.get("attributes"),
+            "offerId": obj.get("offerId"),
             "offerName": obj.get("offerName"),
+            "sellableQuantities": obj.get("sellableQuantities"),
+            "protected": obj.get("protected"),
             "description": obj.get("description"),
             "inventoryType": obj.get("inventoryType"),
             "offerType": obj.get("offerType")
