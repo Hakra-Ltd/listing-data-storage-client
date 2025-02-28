@@ -17,22 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.change_info import ChangeInfo
-from listing_data_storage_client.models.pagination_schema import PaginationSchema
-from listing_data_storage_client.models.ticketmaster_change_schema import TicketmasterChangeSchema
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TickemasterChangeResponseSchema(BaseModel):
+class ListingInfoSeatStoreSchema(BaseModel):
     """
-    TickemasterChangeResponseSchema
+    ListingInfoSeatStoreSchema
     """ # noqa: E501
-    pagination: PaginationSchema
-    info: ChangeInfo
-    change_data: Optional[List[TicketmasterChangeSchema]] = None
-    __properties: ClassVar[List[str]] = ["pagination", "info", "change_data"]
+    place_id: StrictStr = Field(alias="placeId")
+    full_section: StrictStr = Field(alias="fullSection")
+    section: StrictStr
+    row: StrictStr
+    seat_number: Optional[StrictStr] = Field(alias="seatNumber")
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(alias="rowRank")
+    count: Annotated[int, Field(strict=True, ge=0)]
+    attributes: Optional[List[StrictStr]] = None
+    offer_id: Optional[StrictStr] = Field(alias="offerId")
+    __properties: ClassVar[List[str]] = ["placeId", "fullSection", "section", "row", "seatNumber", "rowRank", "count", "attributes", "offerId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +56,7 @@ class TickemasterChangeResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TickemasterChangeResponseSchema from a JSON string"""
+        """Create an instance of ListingInfoSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,24 +77,26 @@ class TickemasterChangeResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of pagination
-        if self.pagination:
-            _dict['pagination'] = self.pagination.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of info
-        if self.info:
-            _dict['info'] = self.info.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in change_data (list)
-        _items = []
-        if self.change_data:
-            for _item_change_data in self.change_data:
-                if _item_change_data:
-                    _items.append(_item_change_data.to_dict())
-            _dict['change_data'] = _items
+        # set to None if seat_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seatNumber'] = None
+
+        # set to None if row_rank (nullable) is None
+        # and model_fields_set contains the field
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['rowRank'] = None
+
+        # set to None if offer_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_id is None and "offer_id" in self.model_fields_set:
+            _dict['offerId'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TickemasterChangeResponseSchema from a dict"""
+        """Create an instance of ListingInfoSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -98,9 +104,15 @@ class TickemasterChangeResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "pagination": PaginationSchema.from_dict(obj["pagination"]) if obj.get("pagination") is not None else None,
-            "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
-            "change_data": [TicketmasterChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
+            "placeId": obj.get("placeId"),
+            "fullSection": obj.get("fullSection"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "seatNumber": obj.get("seatNumber"),
+            "rowRank": obj.get("rowRank"),
+            "count": obj.get("count"),
+            "attributes": obj.get("attributes"),
+            "offerId": obj.get("offerId")
         })
         return _obj
 

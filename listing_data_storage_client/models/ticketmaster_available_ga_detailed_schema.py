@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -28,16 +29,19 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
     TicketmasterAvailableGaDetailedSchema
     """ # noqa: E501
     place_id: StrictStr
+    full_section: Optional[StrictStr]
     section: StrictStr
     row: StrictStr
-    count: Annotated[int, Field(strict=True, ge=0)]
+    count: Optional[Annotated[int, Field(strict=True, ge=0)]]
     attributes: List[StrictStr]
     offer_name: Optional[StrictStr]
     description: List[StrictStr]
     inventory_type: Optional[StrictStr]
+    protected: Optional[StrictBool]
     list_price: Optional[StrictStr]
     total_price: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
+    inserted: datetime
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "protected", "list_price", "total_price", "inserted"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,6 +82,16 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if full_section (nullable) is None
+        # and model_fields_set contains the field
+        if self.full_section is None and "full_section" in self.model_fields_set:
+            _dict['full_section'] = None
+
+        # set to None if count (nullable) is None
+        # and model_fields_set contains the field
+        if self.count is None and "count" in self.model_fields_set:
+            _dict['count'] = None
+
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
@@ -87,6 +101,11 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
         # and model_fields_set contains the field
         if self.inventory_type is None and "inventory_type" in self.model_fields_set:
             _dict['inventory_type'] = None
+
+        # set to None if protected (nullable) is None
+        # and model_fields_set contains the field
+        if self.protected is None and "protected" in self.model_fields_set:
+            _dict['protected'] = None
 
         # set to None if list_price (nullable) is None
         # and model_fields_set contains the field
@@ -111,6 +130,7 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
 
         _obj = cls.model_validate({
             "place_id": obj.get("place_id"),
+            "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
             "count": obj.get("count"),
@@ -118,8 +138,10 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
             "offer_name": obj.get("offer_name"),
             "description": obj.get("description"),
             "inventory_type": obj.get("inventory_type"),
+            "protected": obj.get("protected"),
             "list_price": obj.get("list_price"),
-            "total_price": obj.get("total_price")
+            "total_price": obj.get("total_price"),
+            "inserted": obj.get("inserted")
         })
         return _obj
 

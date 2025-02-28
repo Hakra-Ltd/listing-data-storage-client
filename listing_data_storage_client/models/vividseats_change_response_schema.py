@@ -20,7 +20,6 @@ import json
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from listing_data_storage_client.models.change_info import ChangeInfo
-from listing_data_storage_client.models.pagination_schema import PaginationSchema
 from listing_data_storage_client.models.vividseats_change_schema import VividseatsChangeSchema
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,10 +28,9 @@ class VividseatsChangeResponseSchema(BaseModel):
     """
     VividseatsChangeResponseSchema
     """ # noqa: E501
-    pagination: PaginationSchema
     info: ChangeInfo
     change_data: Optional[List[VividseatsChangeSchema]] = None
-    __properties: ClassVar[List[str]] = ["pagination", "info", "change_data"]
+    __properties: ClassVar[List[str]] = ["info", "change_data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,9 +71,6 @@ class VividseatsChangeResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of pagination
-        if self.pagination:
-            _dict['pagination'] = self.pagination.to_dict()
         # override the default output from pydantic by calling `to_dict()` of info
         if self.info:
             _dict['info'] = self.info.to_dict()
@@ -98,7 +93,6 @@ class VividseatsChangeResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "pagination": PaginationSchema.from_dict(obj["pagination"]) if obj.get("pagination") is not None else None,
             "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
             "change_data": [VividseatsChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
         })
