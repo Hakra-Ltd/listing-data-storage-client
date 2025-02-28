@@ -18,17 +18,18 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class SingleSeatSoldSchema(BaseModel):
     """
-    SingleChangeSchema
+    SingleSeatSoldSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    seat_number: StrictStr
+    inserted: Optional[datetime] = None
+    __properties: ClassVar[List[str]] = ["seat_number", "inserted"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +49,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of SingleSeatSoldSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +70,16 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if inserted (nullable) is None
+        # and model_fields_set contains the field
+        if self.inserted is None and "inserted" in self.model_fields_set:
+            _dict['inserted'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of SingleSeatSoldSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +87,8 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "seat_number": obj.get("seat_number"),
+            "inserted": obj.get("inserted")
         })
         return _obj
 

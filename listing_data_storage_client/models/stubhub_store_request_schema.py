@@ -17,20 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.change_info import ChangeInfo
-from listing_data_storage_client.models.vividseats_change_schema import VividseatsChangeSchema
+from listing_data_storage_client.models.stubhub_store_schema import StubhubStoreSchema
+from listing_data_storage_client.models.stubhub_update_seat_store_schema import StubhubUpdateSeatStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class VividseatsChangeResponseSchema(BaseModel):
+class StubhubStoreRequestSchema(BaseModel):
     """
-    VividseatsChangeResponseSchema
+    StubhubStoreRequestSchema
     """ # noqa: E501
-    info: ChangeInfo
-    change_data: Optional[List[VividseatsChangeSchema]] = None
-    __properties: ClassVar[List[str]] = ["info", "change_data"]
+    message_id: StrictStr = Field(alias="messageId")
+    venue_id: StrictStr = Field(alias="venueId")
+    event_id: StrictStr = Field(alias="eventId")
+    event_timestamp: datetime = Field(alias="eventTimestamp")
+    full_update: StrictBool = Field(alias="fullUpdate")
+    update: Optional[StubhubUpdateSeatStoreSchema] = None
+    seats: List[StubhubStoreSchema]
+    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "update", "seats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +56,7 @@ class VividseatsChangeResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of VividseatsChangeResponseSchema from a JSON string"""
+        """Create an instance of StubhubStoreRequestSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,21 +77,26 @@ class VividseatsChangeResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of info
-        if self.info:
-            _dict['info'] = self.info.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in change_data (list)
+        # override the default output from pydantic by calling `to_dict()` of update
+        if self.update:
+            _dict['update'] = self.update.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in seats (list)
         _items = []
-        if self.change_data:
-            for _item_change_data in self.change_data:
-                if _item_change_data:
-                    _items.append(_item_change_data.to_dict())
-            _dict['change_data'] = _items
+        if self.seats:
+            for _item_seats in self.seats:
+                if _item_seats:
+                    _items.append(_item_seats.to_dict())
+            _dict['seats'] = _items
+        # set to None if update (nullable) is None
+        # and model_fields_set contains the field
+        if self.update is None and "update" in self.model_fields_set:
+            _dict['update'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of VividseatsChangeResponseSchema from a dict"""
+        """Create an instance of StubhubStoreRequestSchema from a dict"""
         if obj is None:
             return None
 
@@ -93,8 +104,13 @@ class VividseatsChangeResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
-            "change_data": [VividseatsChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
+            "messageId": obj.get("messageId"),
+            "venueId": obj.get("venueId"),
+            "eventId": obj.get("eventId"),
+            "eventTimestamp": obj.get("eventTimestamp"),
+            "fullUpdate": obj.get("fullUpdate"),
+            "update": StubhubUpdateSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
+            "seats": [StubhubStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None
         })
         return _obj
 

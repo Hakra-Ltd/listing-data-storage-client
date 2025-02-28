@@ -17,20 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.change_info import ChangeInfo
-from listing_data_storage_client.models.vividseats_change_schema import VividseatsChangeSchema
+from listing_data_storage_client.models.stubhub_price_store_schema import StubhubPriceStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class VividseatsChangeResponseSchema(BaseModel):
+class StubhubUpdateSeatStoreSchema(BaseModel):
     """
-    VividseatsChangeResponseSchema
+    StubhubUpdateSeatStoreSchema
     """ # noqa: E501
-    info: ChangeInfo
-    change_data: Optional[List[VividseatsChangeSchema]] = None
-    __properties: ClassVar[List[str]] = ["info", "change_data"]
+    add_place: List[StubhubPriceStoreSchema]
+    remove_place: List[StrictStr]
+    update_place: List[StubhubPriceStoreSchema]
+    update_info: Optional[List[Any]] = Field(default=None, alias="updateInfo")
+    empty_event: StrictBool
+    __properties: ClassVar[List[str]] = ["add_place", "remove_place", "update_place", "updateInfo", "empty_event"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +52,7 @@ class VividseatsChangeResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of VividseatsChangeResponseSchema from a JSON string"""
+        """Create an instance of StubhubUpdateSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,21 +73,30 @@ class VividseatsChangeResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of info
-        if self.info:
-            _dict['info'] = self.info.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in change_data (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in add_place (list)
         _items = []
-        if self.change_data:
-            for _item_change_data in self.change_data:
-                if _item_change_data:
-                    _items.append(_item_change_data.to_dict())
-            _dict['change_data'] = _items
+        if self.add_place:
+            for _item_add_place in self.add_place:
+                if _item_add_place:
+                    _items.append(_item_add_place.to_dict())
+            _dict['add_place'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in update_place (list)
+        _items = []
+        if self.update_place:
+            for _item_update_place in self.update_place:
+                if _item_update_place:
+                    _items.append(_item_update_place.to_dict())
+            _dict['update_place'] = _items
+        # set to None if update_info (nullable) is None
+        # and model_fields_set contains the field
+        if self.update_info is None and "update_info" in self.model_fields_set:
+            _dict['updateInfo'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of VividseatsChangeResponseSchema from a dict"""
+        """Create an instance of StubhubUpdateSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -93,8 +104,11 @@ class VividseatsChangeResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
-            "change_data": [VividseatsChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
+            "add_place": [StubhubPriceStoreSchema.from_dict(_item) for _item in obj["add_place"]] if obj.get("add_place") is not None else None,
+            "remove_place": obj.get("remove_place"),
+            "update_place": [StubhubPriceStoreSchema.from_dict(_item) for _item in obj["update_place"]] if obj.get("update_place") is not None else None,
+            "updateInfo": obj.get("updateInfo"),
+            "empty_event": obj.get("empty_event")
         })
         return _obj
 

@@ -19,17 +19,17 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.evenue_price_seat_store_schema import EvenuePriceSeatStoreSchema
+from listing_data_storage_client.models.tickpick_price_store_schema import TickpickPriceStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateEvenueSeatStoreSchema(BaseModel):
+class TickpickUpdateSeatStoreSchema(BaseModel):
     """
-    UpdateEvenueSeatStoreSchema
+    TickpickUpdateSeatStoreSchema
     """ # noqa: E501
-    add_place: List[EvenuePriceSeatStoreSchema] = Field(alias="addPlace")
+    add_place: List[TickpickPriceStoreSchema] = Field(alias="addPlace")
     remove_place: List[StrictStr] = Field(alias="removePlace")
-    update_place: List[EvenuePriceSeatStoreSchema] = Field(alias="updatePlace")
+    update_place: List[TickpickPriceStoreSchema] = Field(alias="updatePlace")
     update_info: Optional[List[Any]] = Field(default=None, alias="updateInfo")
     empty_event: Optional[StrictBool] = Field(default=False, alias="emptyEvent")
     __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "updateInfo", "emptyEvent"]
@@ -52,7 +52,7 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateEvenueSeatStoreSchema from a JSON string"""
+        """Create an instance of TickpickUpdateSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -96,7 +96,7 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateEvenueSeatStoreSchema from a dict"""
+        """Create an instance of TickpickUpdateSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -104,9 +104,9 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "addPlace": [EvenuePriceSeatStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
+            "addPlace": [TickpickPriceStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
             "removePlace": obj.get("removePlace"),
-            "updatePlace": [EvenuePriceSeatStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
+            "updatePlace": [TickpickPriceStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
             "updateInfo": obj.get("updateInfo"),
             "emptyEvent": obj.get("emptyEvent") if obj.get("emptyEvent") is not None else False
         })

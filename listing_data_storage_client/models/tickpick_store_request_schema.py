@@ -17,22 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.evenue_price_seat_store_schema import EvenuePriceSeatStoreSchema
+from listing_data_storage_client.models.tickpick_store_schema import TickpickStoreSchema
+from listing_data_storage_client.models.tickpick_update_seat_store_schema import TickpickUpdateSeatStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateEvenueSeatStoreSchema(BaseModel):
+class TickpickStoreRequestSchema(BaseModel):
     """
-    UpdateEvenueSeatStoreSchema
+    TickpickStoreRequestSchema
     """ # noqa: E501
-    add_place: List[EvenuePriceSeatStoreSchema] = Field(alias="addPlace")
-    remove_place: List[StrictStr] = Field(alias="removePlace")
-    update_place: List[EvenuePriceSeatStoreSchema] = Field(alias="updatePlace")
-    update_info: Optional[List[Any]] = Field(default=None, alias="updateInfo")
-    empty_event: Optional[StrictBool] = Field(default=False, alias="emptyEvent")
-    __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "updateInfo", "emptyEvent"]
+    message_id: StrictStr = Field(alias="messageId")
+    venue_id: StrictStr = Field(alias="venueId")
+    event_id: StrictStr = Field(alias="eventId")
+    event_timestamp: datetime = Field(alias="eventTimestamp")
+    full_update: StrictBool = Field(alias="fullUpdate")
+    update: Optional[TickpickUpdateSeatStoreSchema] = None
+    seats: List[TickpickStoreSchema]
+    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "update", "seats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +56,7 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateEvenueSeatStoreSchema from a JSON string"""
+        """Create an instance of TickpickStoreRequestSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,30 +77,26 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in add_place (list)
+        # override the default output from pydantic by calling `to_dict()` of update
+        if self.update:
+            _dict['update'] = self.update.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in seats (list)
         _items = []
-        if self.add_place:
-            for _item_add_place in self.add_place:
-                if _item_add_place:
-                    _items.append(_item_add_place.to_dict())
-            _dict['addPlace'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in update_place (list)
-        _items = []
-        if self.update_place:
-            for _item_update_place in self.update_place:
-                if _item_update_place:
-                    _items.append(_item_update_place.to_dict())
-            _dict['updatePlace'] = _items
-        # set to None if update_info (nullable) is None
+        if self.seats:
+            for _item_seats in self.seats:
+                if _item_seats:
+                    _items.append(_item_seats.to_dict())
+            _dict['seats'] = _items
+        # set to None if update (nullable) is None
         # and model_fields_set contains the field
-        if self.update_info is None and "update_info" in self.model_fields_set:
-            _dict['updateInfo'] = None
+        if self.update is None and "update" in self.model_fields_set:
+            _dict['update'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateEvenueSeatStoreSchema from a dict"""
+        """Create an instance of TickpickStoreRequestSchema from a dict"""
         if obj is None:
             return None
 
@@ -104,11 +104,13 @@ class UpdateEvenueSeatStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "addPlace": [EvenuePriceSeatStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
-            "removePlace": obj.get("removePlace"),
-            "updatePlace": [EvenuePriceSeatStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
-            "updateInfo": obj.get("updateInfo"),
-            "emptyEvent": obj.get("emptyEvent") if obj.get("emptyEvent") is not None else False
+            "messageId": obj.get("messageId"),
+            "venueId": obj.get("venueId"),
+            "eventId": obj.get("eventId"),
+            "eventTimestamp": obj.get("eventTimestamp"),
+            "fullUpdate": obj.get("fullUpdate"),
+            "update": TickpickUpdateSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
+            "seats": [TickpickStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None
         })
         return _obj
 

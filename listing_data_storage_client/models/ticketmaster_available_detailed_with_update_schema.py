@@ -18,30 +18,35 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TicketmasterAvailableGaDetailedSchema(BaseModel):
+class TicketmasterAvailableDetailedWithUpdateSchema(BaseModel):
     """
-    TicketmasterAvailableGaDetailedSchema
+    TicketmasterAvailableDetailedWithUpdateSchema
     """ # noqa: E501
     place_id: StrictStr
     full_section: Optional[StrictStr]
     section: StrictStr
     row: StrictStr
-    count: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    seat_number: Optional[StrictStr]
     attributes: List[StrictStr]
+    offer_id: Optional[StrictStr]
     offer_name: Optional[StrictStr]
+    sellable_quantities: Optional[List[StrictInt]]
+    protected: Optional[StrictBool]
     description: List[StrictStr]
     inventory_type: Optional[StrictStr]
-    protected: Optional[StrictBool]
     list_price: Optional[StrictStr]
     total_price: Optional[StrictStr]
     inserted: datetime
-    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "protected", "list_price", "total_price", "inserted"]
+    prev_updated: Optional[datetime] = None
+    update_reason: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "row_rank", "seat_number", "attributes", "offer_id", "offer_name", "sellable_quantities", "protected", "description", "inventory_type", "list_price", "total_price", "inserted", "prev_updated", "update_reason"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -61,7 +66,7 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailableGaDetailedSchema from a JSON string"""
+        """Create an instance of TicketmasterAvailableDetailedWithUpdateSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,25 +92,40 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
         if self.full_section is None and "full_section" in self.model_fields_set:
             _dict['full_section'] = None
 
-        # set to None if count (nullable) is None
+        # set to None if row_rank (nullable) is None
         # and model_fields_set contains the field
-        if self.count is None and "count" in self.model_fields_set:
-            _dict['count'] = None
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['row_rank'] = None
+
+        # set to None if seat_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seat_number'] = None
+
+        # set to None if offer_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_id is None and "offer_id" in self.model_fields_set:
+            _dict['offer_id'] = None
 
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
             _dict['offer_name'] = None
 
-        # set to None if inventory_type (nullable) is None
+        # set to None if sellable_quantities (nullable) is None
         # and model_fields_set contains the field
-        if self.inventory_type is None and "inventory_type" in self.model_fields_set:
-            _dict['inventory_type'] = None
+        if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
+            _dict['sellable_quantities'] = None
 
         # set to None if protected (nullable) is None
         # and model_fields_set contains the field
         if self.protected is None and "protected" in self.model_fields_set:
             _dict['protected'] = None
+
+        # set to None if inventory_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.inventory_type is None and "inventory_type" in self.model_fields_set:
+            _dict['inventory_type'] = None
 
         # set to None if list_price (nullable) is None
         # and model_fields_set contains the field
@@ -117,11 +137,21 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
         if self.total_price is None and "total_price" in self.model_fields_set:
             _dict['total_price'] = None
 
+        # set to None if prev_updated (nullable) is None
+        # and model_fields_set contains the field
+        if self.prev_updated is None and "prev_updated" in self.model_fields_set:
+            _dict['prev_updated'] = None
+
+        # set to None if update_reason (nullable) is None
+        # and model_fields_set contains the field
+        if self.update_reason is None and "update_reason" in self.model_fields_set:
+            _dict['update_reason'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailableGaDetailedSchema from a dict"""
+        """Create an instance of TicketmasterAvailableDetailedWithUpdateSchema from a dict"""
         if obj is None:
             return None
 
@@ -133,15 +163,20 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
             "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "count": obj.get("count"),
+            "row_rank": obj.get("row_rank"),
+            "seat_number": obj.get("seat_number"),
             "attributes": obj.get("attributes"),
+            "offer_id": obj.get("offer_id"),
             "offer_name": obj.get("offer_name"),
+            "sellable_quantities": obj.get("sellable_quantities"),
+            "protected": obj.get("protected"),
             "description": obj.get("description"),
             "inventory_type": obj.get("inventory_type"),
-            "protected": obj.get("protected"),
             "list_price": obj.get("list_price"),
             "total_price": obj.get("total_price"),
-            "inserted": obj.get("inserted")
+            "inserted": obj.get("inserted"),
+            "prev_updated": obj.get("prev_updated"),
+            "update_reason": obj.get("update_reason")
         })
         return _obj
 
