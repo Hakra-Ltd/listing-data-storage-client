@@ -18,17 +18,21 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class TicketmasterSingleChangeSchema(BaseModel):
     """
-    SingleChangeSchema
+    TicketmasterSingleChangeSchema
     """ # noqa: E501
     updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    previous_list_price: StrictStr
+    new_list_price: StrictStr
+    previous_total_price: StrictStr
+    new_total_price: StrictStr
+    __properties: ClassVar[List[str]] = ["updated", "previous_list_price", "new_list_price", "previous_total_price", "new_total_price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +52,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of TicketmasterSingleChangeSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +77,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of TicketmasterSingleChangeSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +85,11 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "updated": obj.get("updated"),
+            "previous_list_price": obj.get("previous_list_price"),
+            "new_list_price": obj.get("new_list_price"),
+            "previous_total_price": obj.get("previous_total_price"),
+            "new_total_price": obj.get("new_total_price")
         })
         return _obj
 

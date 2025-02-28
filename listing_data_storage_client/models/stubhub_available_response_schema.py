@@ -17,18 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.available_info import AvailableInfo
+from listing_data_storage_client.models.pagination_schema import PaginationSchema
+from listing_data_storage_client.models.stubhub_available_schema import StubhubAvailableSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class StubhubAvailableResponseSchema(BaseModel):
     """
-    SingleChangeSchema
+    StubhubAvailableResponseSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    pagination: PaginationSchema
+    info: AvailableInfo
+    available_data: Optional[List[StubhubAvailableSchema]] = None
+    __properties: ClassVar[List[str]] = ["pagination", "info", "available_data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +52,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of StubhubAvailableResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +73,24 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of pagination
+        if self.pagination:
+            _dict['pagination'] = self.pagination.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of info
+        if self.info:
+            _dict['info'] = self.info.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in available_data (list)
+        _items = []
+        if self.available_data:
+            for _item_available_data in self.available_data:
+                if _item_available_data:
+                    _items.append(_item_available_data.to_dict())
+            _dict['available_data'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of StubhubAvailableResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +98,9 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "pagination": PaginationSchema.from_dict(obj["pagination"]) if obj.get("pagination") is not None else None,
+            "info": AvailableInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
+            "available_data": [StubhubAvailableSchema.from_dict(_item) for _item in obj["available_data"]] if obj.get("available_data") is not None else None
         })
         return _obj
 

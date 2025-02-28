@@ -24,9 +24,9 @@ from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class VividseatsAvailableSchema(BaseModel):
+class TickpickAvailableSchema(BaseModel):
     """
-    VividseatsAvailableSchema
+    TickpickAvailableSchema
     """ # noqa: E501
     place_id: StrictStr
     section: StrictStr
@@ -36,10 +36,14 @@ class VividseatsAvailableSchema(BaseModel):
     inserted: datetime
     updated: Optional[datetime]
     quantity: Optional[Annotated[int, Field(strict=True, ge=0)]]
-    sellable_quantities: Optional[List[StrictInt]]
-    section_code: Optional[StrictStr]
-    section_grouping_code: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "price", "notes", "inserted", "updated", "quantity", "sellable_quantities", "section_code", "section_grouping_code"]
+    subtotal_value: Optional[StrictStr]
+    displayed_value: Optional[StrictStr]
+    face_value: Optional[StrictStr]
+    seat_from: Optional[StrictStr]
+    seat_to: Optional[StrictStr]
+    ticket_type: Optional[StrictStr]
+    split_purchase_options: Optional[List[StrictInt]]
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "price", "notes", "inserted", "updated", "quantity", "subtotal_value", "displayed_value", "face_value", "seat_from", "seat_to", "ticket_type", "split_purchase_options"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +63,7 @@ class VividseatsAvailableSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of VividseatsAvailableSchema from a JSON string"""
+        """Create an instance of TickpickAvailableSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -100,26 +104,46 @@ class VividseatsAvailableSchema(BaseModel):
         if self.quantity is None and "quantity" in self.model_fields_set:
             _dict['quantity'] = None
 
-        # set to None if sellable_quantities (nullable) is None
+        # set to None if subtotal_value (nullable) is None
         # and model_fields_set contains the field
-        if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
-            _dict['sellable_quantities'] = None
+        if self.subtotal_value is None and "subtotal_value" in self.model_fields_set:
+            _dict['subtotal_value'] = None
 
-        # set to None if section_code (nullable) is None
+        # set to None if displayed_value (nullable) is None
         # and model_fields_set contains the field
-        if self.section_code is None and "section_code" in self.model_fields_set:
-            _dict['section_code'] = None
+        if self.displayed_value is None and "displayed_value" in self.model_fields_set:
+            _dict['displayed_value'] = None
 
-        # set to None if section_grouping_code (nullable) is None
+        # set to None if face_value (nullable) is None
         # and model_fields_set contains the field
-        if self.section_grouping_code is None and "section_grouping_code" in self.model_fields_set:
-            _dict['section_grouping_code'] = None
+        if self.face_value is None and "face_value" in self.model_fields_set:
+            _dict['face_value'] = None
+
+        # set to None if seat_from (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_from is None and "seat_from" in self.model_fields_set:
+            _dict['seat_from'] = None
+
+        # set to None if seat_to (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_to is None and "seat_to" in self.model_fields_set:
+            _dict['seat_to'] = None
+
+        # set to None if ticket_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.ticket_type is None and "ticket_type" in self.model_fields_set:
+            _dict['ticket_type'] = None
+
+        # set to None if split_purchase_options (nullable) is None
+        # and model_fields_set contains the field
+        if self.split_purchase_options is None and "split_purchase_options" in self.model_fields_set:
+            _dict['split_purchase_options'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of VividseatsAvailableSchema from a dict"""
+        """Create an instance of TickpickAvailableSchema from a dict"""
         if obj is None:
             return None
 
@@ -135,9 +159,13 @@ class VividseatsAvailableSchema(BaseModel):
             "inserted": obj.get("inserted"),
             "updated": obj.get("updated"),
             "quantity": obj.get("quantity"),
-            "sellable_quantities": obj.get("sellable_quantities"),
-            "section_code": obj.get("section_code"),
-            "section_grouping_code": obj.get("section_grouping_code")
+            "subtotal_value": obj.get("subtotal_value"),
+            "displayed_value": obj.get("displayed_value"),
+            "face_value": obj.get("face_value"),
+            "seat_from": obj.get("seat_from"),
+            "seat_to": obj.get("seat_to"),
+            "ticket_type": obj.get("ticket_type"),
+            "split_purchase_options": obj.get("split_purchase_options")
         })
         return _obj
 

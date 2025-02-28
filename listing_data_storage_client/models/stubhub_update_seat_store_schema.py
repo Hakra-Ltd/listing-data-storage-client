@@ -17,18 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
+from listing_data_storage_client.models.stubhub_price_store_schema import StubhubPriceStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class StubhubUpdateSeatStoreSchema(BaseModel):
     """
-    SingleChangeSchema
+    StubhubUpdateSeatStoreSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    add_place: List[StubhubPriceStoreSchema]
+    remove_place: List[StrictStr]
+    update_place: List[StubhubPriceStoreSchema]
+    empty_event: StrictBool
+    __properties: ClassVar[List[str]] = ["add_place", "remove_place", "update_place", "empty_event"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +51,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of StubhubUpdateSeatStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +72,25 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in add_place (list)
+        _items = []
+        if self.add_place:
+            for _item_add_place in self.add_place:
+                if _item_add_place:
+                    _items.append(_item_add_place.to_dict())
+            _dict['add_place'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in update_place (list)
+        _items = []
+        if self.update_place:
+            for _item_update_place in self.update_place:
+                if _item_update_place:
+                    _items.append(_item_update_place.to_dict())
+            _dict['update_place'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of StubhubUpdateSeatStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +98,10 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "add_place": [StubhubPriceStoreSchema.from_dict(_item) for _item in obj["add_place"]] if obj.get("add_place") is not None else None,
+            "remove_place": obj.get("remove_place"),
+            "update_place": [StubhubPriceStoreSchema.from_dict(_item) for _item in obj["update_place"]] if obj.get("update_place") is not None else None,
+            "empty_event": obj.get("empty_event")
         })
         return _obj
 
