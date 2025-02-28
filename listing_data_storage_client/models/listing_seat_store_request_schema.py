@@ -35,10 +35,10 @@ class ListingSeatStoreRequestSchema(BaseModel):
     event_id: StrictStr = Field(alias="eventId")
     event_timestamp: datetime = Field(alias="eventTimestamp")
     full_update: StrictBool = Field(alias="fullUpdate")
-    seats: List[ListingSeatStoreSchema]
     update: Optional[UpdateListingSeatStoreSchema] = None
+    seats: List[ListingSeatStoreSchema]
     ga_section: Optional[List[ListingsGaSectionStoreSchema]] = None
-    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "seats", "update", "ga_section"]
+    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "update", "seats", "ga_section"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,6 +79,9 @@ class ListingSeatStoreRequestSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of update
+        if self.update:
+            _dict['update'] = self.update.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in seats (list)
         _items = []
         if self.seats:
@@ -86,9 +89,6 @@ class ListingSeatStoreRequestSchema(BaseModel):
                 if _item_seats:
                     _items.append(_item_seats.to_dict())
             _dict['seats'] = _items
-        # override the default output from pydantic by calling `to_dict()` of update
-        if self.update:
-            _dict['update'] = self.update.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in ga_section (list)
         _items = []
         if self.ga_section:
@@ -123,8 +123,8 @@ class ListingSeatStoreRequestSchema(BaseModel):
             "eventId": obj.get("eventId"),
             "eventTimestamp": obj.get("eventTimestamp"),
             "fullUpdate": obj.get("fullUpdate"),
-            "seats": [ListingSeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
             "update": UpdateListingSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
+            "seats": [ListingSeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
             "ga_section": [ListingsGaSectionStoreSchema.from_dict(_item) for _item in obj["ga_section"]] if obj.get("ga_section") is not None else None
         })
         return _obj
