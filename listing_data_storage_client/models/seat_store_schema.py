@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from listing_data_storage_client.models.price import Price
+from listing_data_storage_client.models.price1 import Price1
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,7 +34,7 @@ class SeatStoreSchema(BaseModel):
     row: StrictStr
     quantity: StrictInt
     sellable_quantities: List[StrictInt] = Field(alias="sellableQuantities")
-    price: Price
+    price: Price1
     notes: StrictStr
     __properties: ClassVar[List[str]] = ["placeId", "section", "section_code", "section_grouping_code", "row", "quantity", "sellableQuantities", "price", "notes"]
 
@@ -99,7 +99,7 @@ class SeatStoreSchema(BaseModel):
             "row": obj.get("row"),
             "quantity": obj.get("quantity"),
             "sellableQuantities": obj.get("sellableQuantities"),
-            "price": Price.from_dict(obj["price"]) if obj.get("price") is not None else None,
+            "price": Price1.from_dict(obj["price"]) if obj.get("price") is not None else None,
             "notes": obj.get("notes")
         })
         return _obj
