@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.stubhub_available_prices_schema import StubhubAvailablePricesSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class StubhubAvailablePricesResponseSchema(BaseModel):
     """
-    SingleChangeSchema
+    StubhubAvailablePricesResponseSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    prices: Optional[List[StubhubAvailablePricesSchema]] = None
+    __properties: ClassVar[List[str]] = ["prices"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of StubhubAvailablePricesResponseSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +69,18 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in prices (list)
+        _items = []
+        if self.prices:
+            for _item_prices in self.prices:
+                if _item_prices:
+                    _items.append(_item_prices.to_dict())
+            _dict['prices'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of StubhubAvailablePricesResponseSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +88,7 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "prices": [StubhubAvailablePricesSchema.from_dict(_item) for _item in obj["prices"]] if obj.get("prices") is not None else None
         })
         return _obj
 

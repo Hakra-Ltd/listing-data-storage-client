@@ -17,24 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from listing_data_storage_client.models.face_value import FaceValue
+from listing_data_storage_client.models.price import Price
+from listing_data_storage_client.models.stubhub_update_item_schema import StubhubUpdateItemSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TicketmasterAvailablePricesSchema(BaseModel):
+class StubhubPriceStoreSchema(BaseModel):
     """
-    TicketmasterAvailablePricesSchema
+    StubhubPriceStoreSchema
     """ # noqa: E501
     place_id: StrictStr
-    listing_price: StrictStr
-    total_price: StrictStr
-    offer_id: Optional[StrictStr]
-    offer_name: Optional[StrictStr] = None
-    sellable_quantities: Optional[List[StrictInt]] = None
-    protected: Optional[StrictBool] = None
-    inventory_type: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["place_id", "listing_price", "total_price", "offer_id", "offer_name", "sellable_quantities", "protected", "inventory_type"]
+    price: Price
+    face_value: Optional[FaceValue]
+    available_tickets: StrictInt
+    available_quantities: List[StrictInt]
+    ticket_class_name: StrictStr
+    max_quantity: StrictInt
+    update_items: Optional[List[StubhubUpdateItemSchema]] = None
+    __properties: ClassVar[List[str]] = ["place_id", "price", "face_value", "available_tickets", "available_quantities", "ticket_class_name", "max_quantity", "update_items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +57,7 @@ class TicketmasterAvailablePricesSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailablePricesSchema from a JSON string"""
+        """Create an instance of StubhubPriceStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,36 +78,27 @@ class TicketmasterAvailablePricesSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if offer_id (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of price
+        if self.price:
+            _dict['price'] = self.price.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of face_value
+        if self.face_value:
+            _dict['face_value'] = self.face_value.to_dict()
+        # set to None if face_value (nullable) is None
         # and model_fields_set contains the field
-        if self.offer_id is None and "offer_id" in self.model_fields_set:
-            _dict['offer_id'] = None
+        if self.face_value is None and "face_value" in self.model_fields_set:
+            _dict['face_value'] = None
 
-        # set to None if offer_name (nullable) is None
+        # set to None if update_items (nullable) is None
         # and model_fields_set contains the field
-        if self.offer_name is None and "offer_name" in self.model_fields_set:
-            _dict['offer_name'] = None
-
-        # set to None if sellable_quantities (nullable) is None
-        # and model_fields_set contains the field
-        if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
-            _dict['sellable_quantities'] = None
-
-        # set to None if protected (nullable) is None
-        # and model_fields_set contains the field
-        if self.protected is None and "protected" in self.model_fields_set:
-            _dict['protected'] = None
-
-        # set to None if inventory_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.inventory_type is None and "inventory_type" in self.model_fields_set:
-            _dict['inventory_type'] = None
+        if self.update_items is None and "update_items" in self.model_fields_set:
+            _dict['update_items'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailablePricesSchema from a dict"""
+        """Create an instance of StubhubPriceStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -113,13 +107,13 @@ class TicketmasterAvailablePricesSchema(BaseModel):
 
         _obj = cls.model_validate({
             "place_id": obj.get("place_id"),
-            "listing_price": obj.get("listing_price"),
-            "total_price": obj.get("total_price"),
-            "offer_id": obj.get("offer_id"),
-            "offer_name": obj.get("offer_name"),
-            "sellable_quantities": obj.get("sellable_quantities"),
-            "protected": obj.get("protected"),
-            "inventory_type": obj.get("inventory_type")
+            "price": Price.from_dict(obj["price"]) if obj.get("price") is not None else None,
+            "face_value": FaceValue.from_dict(obj["face_value"]) if obj.get("face_value") is not None else None,
+            "available_tickets": obj.get("available_tickets"),
+            "available_quantities": obj.get("available_quantities"),
+            "ticket_class_name": obj.get("ticket_class_name"),
+            "max_quantity": obj.get("max_quantity"),
+            "update_items": obj.get("update_items")
         })
         return _obj
 

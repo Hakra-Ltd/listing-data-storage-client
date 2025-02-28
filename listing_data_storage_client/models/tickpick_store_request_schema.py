@@ -18,24 +18,25 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
-from listing_data_storage_client.models.seats import Seats
+from listing_data_storage_client.models.tickpick_store_schema import TickpickStoreSchema
+from listing_data_storage_client.models.tickpick_update_seat_store_schema import TickpickUpdateSeatStoreSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SeatSoldSchema(BaseModel):
+class TickpickStoreRequestSchema(BaseModel):
     """
-    SeatSoldSchema
+    TickpickStoreRequestSchema
     """ # noqa: E501
-    section: StrictStr
-    row: Optional[StrictStr]
-    seats: Seats
-    quantity: Annotated[int, Field(strict=True, ge=0)]
-    sold_time: datetime
-    price: StrictStr
-    __properties: ClassVar[List[str]] = ["section", "row", "seats", "quantity", "sold_time", "price"]
+    message_id: StrictStr = Field(alias="messageId")
+    venue_id: StrictStr = Field(alias="venueId")
+    event_id: StrictStr = Field(alias="eventId")
+    event_timestamp: datetime = Field(alias="eventTimestamp")
+    full_update: StrictBool = Field(alias="fullUpdate")
+    seats: List[TickpickStoreSchema]
+    update: Optional[TickpickUpdateSeatStoreSchema] = None
+    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "seats", "update"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -55,7 +56,7 @@ class SeatSoldSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SeatSoldSchema from a JSON string"""
+        """Create an instance of TickpickStoreRequestSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,19 +77,26 @@ class SeatSoldSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of seats
+        # override the default output from pydantic by calling `to_dict()` of each item in seats (list)
+        _items = []
         if self.seats:
-            _dict['seats'] = self.seats.to_dict()
-        # set to None if row (nullable) is None
+            for _item_seats in self.seats:
+                if _item_seats:
+                    _items.append(_item_seats.to_dict())
+            _dict['seats'] = _items
+        # override the default output from pydantic by calling `to_dict()` of update
+        if self.update:
+            _dict['update'] = self.update.to_dict()
+        # set to None if update (nullable) is None
         # and model_fields_set contains the field
-        if self.row is None and "row" in self.model_fields_set:
-            _dict['row'] = None
+        if self.update is None and "update" in self.model_fields_set:
+            _dict['update'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SeatSoldSchema from a dict"""
+        """Create an instance of TickpickStoreRequestSchema from a dict"""
         if obj is None:
             return None
 
@@ -96,12 +104,13 @@ class SeatSoldSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "section": obj.get("section"),
-            "row": obj.get("row"),
-            "seats": Seats.from_dict(obj["seats"]) if obj.get("seats") is not None else None,
-            "quantity": obj.get("quantity"),
-            "sold_time": obj.get("sold_time"),
-            "price": obj.get("price")
+            "messageId": obj.get("messageId"),
+            "venueId": obj.get("venueId"),
+            "eventId": obj.get("eventId"),
+            "eventTimestamp": obj.get("eventTimestamp"),
+            "fullUpdate": obj.get("fullUpdate"),
+            "seats": [TickpickStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
+            "update": TickpickUpdateSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None
         })
         return _obj
 
