@@ -17,22 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from listing_data_storage_client.models.change_info import ChangeInfo
-from listing_data_storage_client.models.pagination_schema import PaginationSchema
-from listing_data_storage_client.models.ticketmaster_change_schema import TicketmasterChangeSchema
+from listing_data_storage_client.models.base_price import BasePrice
+from listing_data_storage_client.models.fees import Fees
+from listing_data_storage_client.models.playhousesquare_update_item_schema import PlayhousesquareUpdateItemSchema
+from listing_data_storage_client.models.total_price import TotalPrice
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TickemasterChangeResponseSchema(BaseModel):
+class PlayhousesquarePriceStoreSchema(BaseModel):
     """
-    TickemasterChangeResponseSchema
+    PlayhousesquarePriceStoreSchema
     """ # noqa: E501
-    pagination: PaginationSchema
-    info: ChangeInfo
-    change_data: Optional[List[TicketmasterChangeSchema]] = None
-    __properties: ClassVar[List[str]] = ["pagination", "info", "change_data"]
+    place_id: StrictStr
+    total_price: TotalPrice
+    base_price: BasePrice
+    fees: Fees
+    update_items: Optional[List[PlayhousesquareUpdateItemSchema]] = None
+    __properties: ClassVar[List[str]] = ["place_id", "total_price", "base_price", "fees", "update_items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +55,7 @@ class TickemasterChangeResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TickemasterChangeResponseSchema from a JSON string"""
+        """Create an instance of PlayhousesquarePriceStoreSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,24 +76,25 @@ class TickemasterChangeResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of pagination
-        if self.pagination:
-            _dict['pagination'] = self.pagination.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of info
-        if self.info:
-            _dict['info'] = self.info.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in change_data (list)
-        _items = []
-        if self.change_data:
-            for _item_change_data in self.change_data:
-                if _item_change_data:
-                    _items.append(_item_change_data.to_dict())
-            _dict['change_data'] = _items
+        # override the default output from pydantic by calling `to_dict()` of total_price
+        if self.total_price:
+            _dict['total_price'] = self.total_price.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of base_price
+        if self.base_price:
+            _dict['base_price'] = self.base_price.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of fees
+        if self.fees:
+            _dict['fees'] = self.fees.to_dict()
+        # set to None if update_items (nullable) is None
+        # and model_fields_set contains the field
+        if self.update_items is None and "update_items" in self.model_fields_set:
+            _dict['update_items'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TickemasterChangeResponseSchema from a dict"""
+        """Create an instance of PlayhousesquarePriceStoreSchema from a dict"""
         if obj is None:
             return None
 
@@ -98,9 +102,11 @@ class TickemasterChangeResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "pagination": PaginationSchema.from_dict(obj["pagination"]) if obj.get("pagination") is not None else None,
-            "info": ChangeInfo.from_dict(obj["info"]) if obj.get("info") is not None else None,
-            "change_data": [TicketmasterChangeSchema.from_dict(_item) for _item in obj["change_data"]] if obj.get("change_data") is not None else None
+            "place_id": obj.get("place_id"),
+            "total_price": TotalPrice.from_dict(obj["total_price"]) if obj.get("total_price") is not None else None,
+            "base_price": BasePrice.from_dict(obj["base_price"]) if obj.get("base_price") is not None else None,
+            "fees": Fees.from_dict(obj["fees"]) if obj.get("fees") is not None else None,
+            "update_items": obj.get("update_items")
         })
         return _obj
 

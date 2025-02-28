@@ -18,17 +18,30 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SectionsResponseSchema(BaseModel):
+class TelechargeAvailablePricesSchema(BaseModel):
     """
-    SectionsResponseSchema
+    TelechargeAvailablePricesSchema
     """ # noqa: E501
-    total: StrictInt
-    sections: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["total", "sections"]
+    place_id: StrictStr
+    total_price: StrictStr
+    base_price: StrictStr
+    fees: StrictStr
+    section_code: StrictStr
+    seat_status: StrictStr
+    section: StrictStr
+    row: StrictStr
+    row_rank: StrictInt
+    seat_number: StrictStr
+    seat_index: StrictInt
+    attributes: StrictStr
+    description: StrictStr
+    price_code: Optional[StrictStr]
+    marketing_code: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["place_id", "total_price", "base_price", "fees", "section_code", "seat_status", "section", "row", "row_rank", "seat_number", "seat_index", "attributes", "description", "price_code", "marketing_code"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +61,7 @@ class SectionsResponseSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SectionsResponseSchema from a JSON string"""
+        """Create an instance of TelechargeAvailablePricesSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +82,21 @@ class SectionsResponseSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if price_code (nullable) is None
+        # and model_fields_set contains the field
+        if self.price_code is None and "price_code" in self.model_fields_set:
+            _dict['price_code'] = None
+
+        # set to None if marketing_code (nullable) is None
+        # and model_fields_set contains the field
+        if self.marketing_code is None and "marketing_code" in self.model_fields_set:
+            _dict['marketing_code'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SectionsResponseSchema from a dict"""
+        """Create an instance of TelechargeAvailablePricesSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +104,21 @@ class SectionsResponseSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "total": obj.get("total"),
-            "sections": obj.get("sections")
+            "place_id": obj.get("place_id"),
+            "total_price": obj.get("total_price"),
+            "base_price": obj.get("base_price"),
+            "fees": obj.get("fees"),
+            "section_code": obj.get("section_code"),
+            "seat_status": obj.get("seat_status"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "row_rank": obj.get("row_rank"),
+            "seat_number": obj.get("seat_number"),
+            "seat_index": obj.get("seat_index"),
+            "attributes": obj.get("attributes"),
+            "description": obj.get("description"),
+            "price_code": obj.get("price_code"),
+            "marketing_code": obj.get("marketing_code")
         })
         return _obj
 
