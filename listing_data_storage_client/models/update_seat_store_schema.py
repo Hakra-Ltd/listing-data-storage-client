@@ -30,8 +30,9 @@ class UpdateSeatStoreSchema(BaseModel):
     add_place: List[PriceSeatStoreSchema] = Field(alias="addPlace")
     remove_place: List[StrictStr] = Field(alias="removePlace")
     update_place: List[PriceSeatStoreSchema] = Field(alias="updatePlace")
+    update_info: Optional[List[Any]] = Field(default=None, alias="updateInfo")
     empty_event: Optional[StrictBool] = Field(default=False, alias="emptyEvent")
-    __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "emptyEvent"]
+    __properties: ClassVar[List[str]] = ["addPlace", "removePlace", "updatePlace", "updateInfo", "emptyEvent"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,6 +87,11 @@ class UpdateSeatStoreSchema(BaseModel):
                 if _item_update_place:
                     _items.append(_item_update_place.to_dict())
             _dict['updatePlace'] = _items
+        # set to None if update_info (nullable) is None
+        # and model_fields_set contains the field
+        if self.update_info is None and "update_info" in self.model_fields_set:
+            _dict['updateInfo'] = None
+
         return _dict
 
     @classmethod
@@ -101,6 +107,7 @@ class UpdateSeatStoreSchema(BaseModel):
             "addPlace": [PriceSeatStoreSchema.from_dict(_item) for _item in obj["addPlace"]] if obj.get("addPlace") is not None else None,
             "removePlace": obj.get("removePlace"),
             "updatePlace": [PriceSeatStoreSchema.from_dict(_item) for _item in obj["updatePlace"]] if obj.get("updatePlace") is not None else None,
+            "updateInfo": obj.get("updateInfo"),
             "emptyEvent": obj.get("emptyEvent") if obj.get("emptyEvent") is not None else False
         })
         return _obj
