@@ -20,33 +20,31 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from listing_data_storage_client.models.listprice import Listprice
-from listing_data_storage_client.models.totalprice import Totalprice
+from listing_data_storage_client.models.status_enum import StatusEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ListingSeatStoreSchema(BaseModel):
+class TicketmasterAllSeatsSchema(BaseModel):
     """
-    The individual seat and or section if it is GA model.
+    TicketmasterAllSeatsSchema
     """ # noqa: E501
-    place_id: StrictStr = Field(alias="placeId")
-    full_section: StrictStr = Field(alias="fullSection")
+    place_id: StrictStr
+    full_section: Optional[StrictStr]
     section: StrictStr
     row: StrictStr
-    seat_number: Optional[StrictStr] = Field(alias="seatNumber")
-    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(alias="rowRank")
-    count: Annotated[int, Field(strict=True, ge=0)]
-    list_price: Optional[Listprice] = Field(default=None, alias="listPrice")
-    total_price: Optional[Totalprice] = Field(default=None, alias="totalPrice")
-    attributes: Optional[List[StrictStr]] = None
-    offer_id: Optional[StrictStr] = Field(alias="offerId")
-    offer_name: Optional[StrictStr] = Field(alias="offerName")
-    sellable_quantities: Optional[List[StrictInt]] = Field(default=None, alias="sellableQuantities")
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    seat_number: Optional[StrictStr]
+    attributes: List[StrictStr]
+    offer_id: Optional[StrictStr]
+    offer_name: Optional[StrictStr]
+    sellable_quantities: Optional[List[StrictInt]]
     protected: Optional[StrictBool]
-    description: Optional[List[StrictStr]] = None
-    inventory_type: Optional[StrictStr] = Field(alias="inventoryType")
-    offer_type: Optional[StrictStr] = Field(alias="offerType")
-    __properties: ClassVar[List[str]] = ["placeId", "fullSection", "section", "row", "seatNumber", "rowRank", "count", "listPrice", "totalPrice", "attributes", "offerId", "offerName", "sellableQuantities", "protected", "description", "inventoryType", "offerType"]
+    description: List[StrictStr]
+    inventory_type: Optional[StrictStr]
+    list_price: Optional[StrictStr]
+    total_price: Optional[StrictStr]
+    status: Optional[StatusEnum]
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "row_rank", "seat_number", "attributes", "offer_id", "offer_name", "sellable_quantities", "protected", "description", "inventory_type", "list_price", "total_price", "status"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -66,7 +64,7 @@ class ListingSeatStoreSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ListingSeatStoreSchema from a JSON string"""
+        """Create an instance of TicketmasterAllSeatsSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,46 +85,35 @@ class ListingSeatStoreSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of list_price
-        if self.list_price:
-            _dict['listPrice'] = self.list_price.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of total_price
-        if self.total_price:
-            _dict['totalPrice'] = self.total_price.to_dict()
-        # set to None if seat_number (nullable) is None
+        # set to None if full_section (nullable) is None
         # and model_fields_set contains the field
-        if self.seat_number is None and "seat_number" in self.model_fields_set:
-            _dict['seatNumber'] = None
+        if self.full_section is None and "full_section" in self.model_fields_set:
+            _dict['full_section'] = None
 
         # set to None if row_rank (nullable) is None
         # and model_fields_set contains the field
         if self.row_rank is None and "row_rank" in self.model_fields_set:
-            _dict['rowRank'] = None
+            _dict['row_rank'] = None
 
-        # set to None if list_price (nullable) is None
+        # set to None if seat_number (nullable) is None
         # and model_fields_set contains the field
-        if self.list_price is None and "list_price" in self.model_fields_set:
-            _dict['listPrice'] = None
-
-        # set to None if total_price (nullable) is None
-        # and model_fields_set contains the field
-        if self.total_price is None and "total_price" in self.model_fields_set:
-            _dict['totalPrice'] = None
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seat_number'] = None
 
         # set to None if offer_id (nullable) is None
         # and model_fields_set contains the field
         if self.offer_id is None and "offer_id" in self.model_fields_set:
-            _dict['offerId'] = None
+            _dict['offer_id'] = None
 
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
-            _dict['offerName'] = None
+            _dict['offer_name'] = None
 
         # set to None if sellable_quantities (nullable) is None
         # and model_fields_set contains the field
         if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
-            _dict['sellableQuantities'] = None
+            _dict['sellable_quantities'] = None
 
         # set to None if protected (nullable) is None
         # and model_fields_set contains the field
@@ -136,18 +123,28 @@ class ListingSeatStoreSchema(BaseModel):
         # set to None if inventory_type (nullable) is None
         # and model_fields_set contains the field
         if self.inventory_type is None and "inventory_type" in self.model_fields_set:
-            _dict['inventoryType'] = None
+            _dict['inventory_type'] = None
 
-        # set to None if offer_type (nullable) is None
+        # set to None if list_price (nullable) is None
         # and model_fields_set contains the field
-        if self.offer_type is None and "offer_type" in self.model_fields_set:
-            _dict['offerType'] = None
+        if self.list_price is None and "list_price" in self.model_fields_set:
+            _dict['list_price'] = None
+
+        # set to None if total_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.total_price is None and "total_price" in self.model_fields_set:
+            _dict['total_price'] = None
+
+        # set to None if status (nullable) is None
+        # and model_fields_set contains the field
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ListingSeatStoreSchema from a dict"""
+        """Create an instance of TicketmasterAllSeatsSchema from a dict"""
         if obj is None:
             return None
 
@@ -155,23 +152,22 @@ class ListingSeatStoreSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "placeId": obj.get("placeId"),
-            "fullSection": obj.get("fullSection"),
+            "place_id": obj.get("place_id"),
+            "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "seatNumber": obj.get("seatNumber"),
-            "rowRank": obj.get("rowRank"),
-            "count": obj.get("count"),
-            "listPrice": Listprice.from_dict(obj["listPrice"]) if obj.get("listPrice") is not None else None,
-            "totalPrice": Totalprice.from_dict(obj["totalPrice"]) if obj.get("totalPrice") is not None else None,
+            "row_rank": obj.get("row_rank"),
+            "seat_number": obj.get("seat_number"),
             "attributes": obj.get("attributes"),
-            "offerId": obj.get("offerId"),
-            "offerName": obj.get("offerName"),
-            "sellableQuantities": obj.get("sellableQuantities"),
+            "offer_id": obj.get("offer_id"),
+            "offer_name": obj.get("offer_name"),
+            "sellable_quantities": obj.get("sellable_quantities"),
             "protected": obj.get("protected"),
             "description": obj.get("description"),
-            "inventoryType": obj.get("inventoryType"),
-            "offerType": obj.get("offerType")
+            "inventory_type": obj.get("inventory_type"),
+            "list_price": obj.get("list_price"),
+            "total_price": obj.get("total_price"),
+            "status": obj.get("status")
         })
         return _obj
 

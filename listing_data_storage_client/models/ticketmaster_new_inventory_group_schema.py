@@ -18,17 +18,28 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class TicketmasterNewInventoryGroupSchema(BaseModel):
     """
-    SingleChangeSchema
+    TicketmasterNewInventoryGroupSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    full_section: StrictStr
+    section: StrictStr
+    row: Optional[StrictStr]
+    seats: Dict[str, Any]
+    quantity: Annotated[int, Field(strict=True, ge=0)]
+    list_price: StrictStr
+    total_price: StrictStr
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    offer_name: Optional[StrictStr]
+    description: List[StrictStr]
+    added_time: datetime
+    __properties: ClassVar[List[str]] = ["full_section", "section", "row", "seats", "quantity", "list_price", "total_price", "row_rank", "offer_name", "description", "added_time"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +59,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of TicketmasterNewInventoryGroupSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +80,26 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if row (nullable) is None
+        # and model_fields_set contains the field
+        if self.row is None and "row" in self.model_fields_set:
+            _dict['row'] = None
+
+        # set to None if row_rank (nullable) is None
+        # and model_fields_set contains the field
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['row_rank'] = None
+
+        # set to None if offer_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_name is None and "offer_name" in self.model_fields_set:
+            _dict['offer_name'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of TicketmasterNewInventoryGroupSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +107,17 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "full_section": obj.get("full_section"),
+            "section": obj.get("section"),
+            "row": obj.get("row"),
+            "seats": obj.get("seats"),
+            "quantity": obj.get("quantity"),
+            "list_price": obj.get("list_price"),
+            "total_price": obj.get("total_price"),
+            "row_rank": obj.get("row_rank"),
+            "offer_name": obj.get("offer_name"),
+            "description": obj.get("description"),
+            "added_time": obj.get("added_time")
         })
         return _obj
 
