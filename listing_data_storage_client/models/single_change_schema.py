@@ -18,8 +18,8 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +28,7 @@ class SingleChangeSchema(BaseModel):
     SingleChangeSchema
     """ # noqa: E501
     updated: datetime
-    previous_price: StrictStr
-    new_price: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["updated", "previous_price", "new_price"]
+    __properties: ClassVar[List[str]] = ["updated"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,11 +69,6 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if new_price (nullable) is None
-        # and model_fields_set contains the field
-        if self.new_price is None and "new_price" in self.model_fields_set:
-            _dict['new_price'] = None
-
         return _dict
 
     @classmethod
@@ -88,9 +81,7 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated"),
-            "previous_price": obj.get("previous_price"),
-            "new_price": obj.get("new_price")
+            "updated": obj.get("updated")
         })
         return _obj
 
