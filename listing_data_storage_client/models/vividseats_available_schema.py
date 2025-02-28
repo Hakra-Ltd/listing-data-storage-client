@@ -37,7 +37,9 @@ class VividseatsAvailableSchema(BaseModel):
     updated: Optional[datetime]
     quantity: Optional[Annotated[int, Field(strict=True, ge=0)]]
     sellable_quantities: Optional[List[StrictInt]]
-    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "price", "notes", "inserted", "updated", "quantity", "sellable_quantities"]
+    section_code: Optional[StrictStr]
+    section_grouping_code: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "price", "notes", "inserted", "updated", "quantity", "sellable_quantities", "section_code", "section_grouping_code"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -103,6 +105,16 @@ class VividseatsAvailableSchema(BaseModel):
         if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
             _dict['sellable_quantities'] = None
 
+        # set to None if section_code (nullable) is None
+        # and model_fields_set contains the field
+        if self.section_code is None and "section_code" in self.model_fields_set:
+            _dict['section_code'] = None
+
+        # set to None if section_grouping_code (nullable) is None
+        # and model_fields_set contains the field
+        if self.section_grouping_code is None and "section_grouping_code" in self.model_fields_set:
+            _dict['section_grouping_code'] = None
+
         return _dict
 
     @classmethod
@@ -123,7 +135,9 @@ class VividseatsAvailableSchema(BaseModel):
             "inserted": obj.get("inserted"),
             "updated": obj.get("updated"),
             "quantity": obj.get("quantity"),
-            "sellable_quantities": obj.get("sellable_quantities")
+            "sellable_quantities": obj.get("sellable_quantities"),
+            "section_code": obj.get("section_code"),
+            "section_grouping_code": obj.get("section_grouping_code")
         })
         return _obj
 
