@@ -5,5 +5,6 @@ from listing_data_storage_client.api.evenue_api import EvenueApi
 from listing_data_storage_client.api.health_api import HealthApi
 from listing_data_storage_client.api.info_api import InfoApi
 from listing_data_storage_client.api.primary_api import PrimaryApi
-from listing_data_storage_client.api.resale_api import ResaleApi
+from listing_data_storage_client.api.tickpick_api import TickpickApi
+from listing_data_storage_client.api.vividseats_api import VividseatsApi
 

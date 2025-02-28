@@ -17,18 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class TickpickAvailablePricesSchema(BaseModel):
     """
-    SingleChangeSchema
+    TickpickAvailablePricesSchema
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    place_id: StrictStr
+    price: StrictStr
+    subtotal_value: Optional[StrictStr]
+    displayed_value: Optional[StrictStr]
+    face_value: Optional[StrictStr]
+    quantity: StrictInt
+    __properties: ClassVar[List[str]] = ["place_id", "price", "subtotal_value", "displayed_value", "face_value", "quantity"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +52,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of TickpickAvailablePricesSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +73,26 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if subtotal_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.subtotal_value is None and "subtotal_value" in self.model_fields_set:
+            _dict['subtotal_value'] = None
+
+        # set to None if displayed_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.displayed_value is None and "displayed_value" in self.model_fields_set:
+            _dict['displayed_value'] = None
+
+        # set to None if face_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.face_value is None and "face_value" in self.model_fields_set:
+            _dict['face_value'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of TickpickAvailablePricesSchema from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +100,12 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "updated": obj.get("updated")
+            "place_id": obj.get("place_id"),
+            "price": obj.get("price"),
+            "subtotal_value": obj.get("subtotal_value"),
+            "displayed_value": obj.get("displayed_value"),
+            "face_value": obj.get("face_value"),
+            "quantity": obj.get("quantity")
         })
         return _obj
 

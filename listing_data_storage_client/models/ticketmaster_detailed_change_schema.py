@@ -17,31 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from listing_data_storage_client.models.ticketmaster_single_change_schema import TicketmasterSingleChangeSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TicketmasterAvailableGaDetailedSchema(BaseModel):
+class TicketmasterDetailedChangeSchema(BaseModel):
     """
-    TicketmasterAvailableGaDetailedSchema
+    TicketmasterDetailedChangeSchema
     """ # noqa: E501
     place_id: StrictStr
     full_section: Optional[StrictStr]
     section: StrictStr
     row: StrictStr
-    count: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    changes: List[TicketmasterSingleChangeSchema]
+    row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    seat_number: Optional[StrictStr]
     attributes: List[StrictStr]
     offer_name: Optional[StrictStr]
     description: List[StrictStr]
-    inventory_type: Optional[StrictStr]
-    protected: Optional[StrictBool]
-    list_price: Optional[StrictStr]
-    total_price: Optional[StrictStr]
-    inserted: datetime
-    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "count", "attributes", "offer_name", "description", "inventory_type", "protected", "list_price", "total_price", "inserted"]
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "changes", "row_rank", "seat_number", "attributes", "offer_name", "description"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -61,7 +58,7 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailableGaDetailedSchema from a JSON string"""
+        """Create an instance of TicketmasterDetailedChangeSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,46 +79,38 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in changes (list)
+        _items = []
+        if self.changes:
+            for _item_changes in self.changes:
+                if _item_changes:
+                    _items.append(_item_changes.to_dict())
+            _dict['changes'] = _items
         # set to None if full_section (nullable) is None
         # and model_fields_set contains the field
         if self.full_section is None and "full_section" in self.model_fields_set:
             _dict['full_section'] = None
 
-        # set to None if count (nullable) is None
+        # set to None if row_rank (nullable) is None
         # and model_fields_set contains the field
-        if self.count is None and "count" in self.model_fields_set:
-            _dict['count'] = None
+        if self.row_rank is None and "row_rank" in self.model_fields_set:
+            _dict['row_rank'] = None
+
+        # set to None if seat_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_number is None and "seat_number" in self.model_fields_set:
+            _dict['seat_number'] = None
 
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
             _dict['offer_name'] = None
 
-        # set to None if inventory_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.inventory_type is None and "inventory_type" in self.model_fields_set:
-            _dict['inventory_type'] = None
-
-        # set to None if protected (nullable) is None
-        # and model_fields_set contains the field
-        if self.protected is None and "protected" in self.model_fields_set:
-            _dict['protected'] = None
-
-        # set to None if list_price (nullable) is None
-        # and model_fields_set contains the field
-        if self.list_price is None and "list_price" in self.model_fields_set:
-            _dict['list_price'] = None
-
-        # set to None if total_price (nullable) is None
-        # and model_fields_set contains the field
-        if self.total_price is None and "total_price" in self.model_fields_set:
-            _dict['total_price'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TicketmasterAvailableGaDetailedSchema from a dict"""
+        """Create an instance of TicketmasterDetailedChangeSchema from a dict"""
         if obj is None:
             return None
 
@@ -133,15 +122,12 @@ class TicketmasterAvailableGaDetailedSchema(BaseModel):
             "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
-            "count": obj.get("count"),
+            "changes": [TicketmasterSingleChangeSchema.from_dict(_item) for _item in obj["changes"]] if obj.get("changes") is not None else None,
+            "row_rank": obj.get("row_rank"),
+            "seat_number": obj.get("seat_number"),
             "attributes": obj.get("attributes"),
             "offer_name": obj.get("offer_name"),
-            "description": obj.get("description"),
-            "inventory_type": obj.get("inventory_type"),
-            "protected": obj.get("protected"),
-            "list_price": obj.get("list_price"),
-            "total_price": obj.get("total_price"),
-            "inserted": obj.get("inserted")
+            "description": obj.get("description")
         })
         return _obj
 

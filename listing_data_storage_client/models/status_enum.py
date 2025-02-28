@@ -18,25 +18,22 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class TicketmasterUpdateItemSchema(str, Enum):
+class StatusEnum(str, Enum):
     """
-    TicketmasterUpdateItemSchema
+    StatusEnum
     """
 
     """
     allowed enum values
     """
-    LIST_PRICE = 'LIST_PRICE'
-    TOTAL_PRICE = 'TOTAL_PRICE'
-    OFFER_ID = 'OFFER_ID'
-    OFFER_NAME = 'OFFER_NAME'
-    SELLABLE_QUANTITIES = 'SELLABLE_QUANTITIES'
-    PROTECTED = 'PROTECTED'
-    INVENTORY_TYPE = 'INVENTORY_TYPE'
+    VALID = 'VALID'
+    REMOVED = 'REMOVED'
+    UPDATED = 'UPDATED'
+    ARCHIVED = 'ARCHIVED'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of TicketmasterUpdateItemSchema from a JSON string"""
+        """Create an instance of StatusEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 
