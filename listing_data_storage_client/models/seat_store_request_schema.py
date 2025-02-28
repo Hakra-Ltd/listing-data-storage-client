@@ -34,9 +34,9 @@ class SeatStoreRequestSchema(BaseModel):
     event_id: StrictStr = Field(alias="eventId")
     event_timestamp: datetime = Field(alias="eventTimestamp")
     full_update: StrictBool = Field(alias="fullUpdate")
-    seats: List[SeatStoreSchema]
     update: Optional[UpdateSeatStoreSchema] = None
-    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "seats", "update"]
+    seats: List[SeatStoreSchema]
+    __properties: ClassVar[List[str]] = ["messageId", "venueId", "eventId", "eventTimestamp", "fullUpdate", "update", "seats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +77,9 @@ class SeatStoreRequestSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of update
+        if self.update:
+            _dict['update'] = self.update.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in seats (list)
         _items = []
         if self.seats:
@@ -84,9 +87,6 @@ class SeatStoreRequestSchema(BaseModel):
                 if _item_seats:
                     _items.append(_item_seats.to_dict())
             _dict['seats'] = _items
-        # override the default output from pydantic by calling `to_dict()` of update
-        if self.update:
-            _dict['update'] = self.update.to_dict()
         # set to None if update (nullable) is None
         # and model_fields_set contains the field
         if self.update is None and "update" in self.model_fields_set:
@@ -109,8 +109,8 @@ class SeatStoreRequestSchema(BaseModel):
             "eventId": obj.get("eventId"),
             "eventTimestamp": obj.get("eventTimestamp"),
             "fullUpdate": obj.get("fullUpdate"),
-            "seats": [SeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None,
-            "update": UpdateSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None
+            "update": UpdateSeatStoreSchema.from_dict(obj["update"]) if obj.get("update") is not None else None,
+            "seats": [SeatStoreSchema.from_dict(_item) for _item in obj["seats"]] if obj.get("seats") is not None else None
         })
         return _obj
 
