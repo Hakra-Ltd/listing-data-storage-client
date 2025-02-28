@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -28,17 +29,23 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
     TicketmasterAvailableDetailedSchema
     """ # noqa: E501
     place_id: StrictStr
+    full_section: Optional[StrictStr]
     section: StrictStr
     row: StrictStr
     row_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
+    seat_rank: Optional[Annotated[int, Field(strict=True, ge=0)]]
     seat_number: Optional[StrictStr]
     attributes: List[StrictStr]
+    offer_id: Optional[StrictStr]
     offer_name: Optional[StrictStr]
+    sellable_quantities: Optional[List[StrictInt]]
+    protected: Optional[StrictBool]
     description: List[StrictStr]
     inventory_type: Optional[StrictStr]
     list_price: Optional[StrictStr]
     total_price: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["place_id", "section", "row", "row_rank", "seat_number", "attributes", "offer_name", "description", "inventory_type", "list_price", "total_price"]
+    inserted: datetime
+    __properties: ClassVar[List[str]] = ["place_id", "full_section", "section", "row", "row_rank", "seat_rank", "seat_number", "attributes", "offer_id", "offer_name", "sellable_quantities", "protected", "description", "inventory_type", "list_price", "total_price", "inserted"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,20 +86,45 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if full_section (nullable) is None
+        # and model_fields_set contains the field
+        if self.full_section is None and "full_section" in self.model_fields_set:
+            _dict['full_section'] = None
+
         # set to None if row_rank (nullable) is None
         # and model_fields_set contains the field
         if self.row_rank is None and "row_rank" in self.model_fields_set:
             _dict['row_rank'] = None
+
+        # set to None if seat_rank (nullable) is None
+        # and model_fields_set contains the field
+        if self.seat_rank is None and "seat_rank" in self.model_fields_set:
+            _dict['seat_rank'] = None
 
         # set to None if seat_number (nullable) is None
         # and model_fields_set contains the field
         if self.seat_number is None and "seat_number" in self.model_fields_set:
             _dict['seat_number'] = None
 
+        # set to None if offer_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.offer_id is None and "offer_id" in self.model_fields_set:
+            _dict['offer_id'] = None
+
         # set to None if offer_name (nullable) is None
         # and model_fields_set contains the field
         if self.offer_name is None and "offer_name" in self.model_fields_set:
             _dict['offer_name'] = None
+
+        # set to None if sellable_quantities (nullable) is None
+        # and model_fields_set contains the field
+        if self.sellable_quantities is None and "sellable_quantities" in self.model_fields_set:
+            _dict['sellable_quantities'] = None
+
+        # set to None if protected (nullable) is None
+        # and model_fields_set contains the field
+        if self.protected is None and "protected" in self.model_fields_set:
+            _dict['protected'] = None
 
         # set to None if inventory_type (nullable) is None
         # and model_fields_set contains the field
@@ -122,16 +154,22 @@ class TicketmasterAvailableDetailedSchema(BaseModel):
 
         _obj = cls.model_validate({
             "place_id": obj.get("place_id"),
+            "full_section": obj.get("full_section"),
             "section": obj.get("section"),
             "row": obj.get("row"),
             "row_rank": obj.get("row_rank"),
+            "seat_rank": obj.get("seat_rank"),
             "seat_number": obj.get("seat_number"),
             "attributes": obj.get("attributes"),
+            "offer_id": obj.get("offer_id"),
             "offer_name": obj.get("offer_name"),
+            "sellable_quantities": obj.get("sellable_quantities"),
+            "protected": obj.get("protected"),
             "description": obj.get("description"),
             "inventory_type": obj.get("inventory_type"),
             "list_price": obj.get("list_price"),
-            "total_price": obj.get("total_price")
+            "total_price": obj.get("total_price"),
+            "inserted": obj.get("inserted")
         })
         return _obj
 

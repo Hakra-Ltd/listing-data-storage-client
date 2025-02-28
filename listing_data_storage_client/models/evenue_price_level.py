@@ -29,7 +29,7 @@ from listing_data_storage_client.models.per_ticket_fee_min import PerTicketFeeMi
 from listing_data_storage_client.models.per_ticket_fee_min_tiered import PerTicketFeeMinTiered
 from listing_data_storage_client.models.price_max import PriceMax
 from listing_data_storage_client.models.price_min import PriceMin
-from listing_data_storage_client.models.total_price import TotalPrice
+from listing_data_storage_client.models.total_price1 import TotalPrice1
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -49,7 +49,7 @@ class EvenuePriceLevel(BaseModel):
     per_ticket_fee_max: Optional[PerTicketFeeMax]
     per_ticket_fee_min_tiered: Optional[PerTicketFeeMinTiered]
     per_ticket_fee_max_tiered: Optional[PerTicketFeeMaxTiered]
-    total_price: TotalPrice
+    total_price: TotalPrice1
     __properties: ClassVar[List[str]] = ["price_level_id", "price_level_secname", "price_min", "price_max", "facility_fee_max", "facility_fee_min", "facility_tiered_fee_min", "facility_tiered_fee_max", "per_ticket_fee_min", "per_ticket_fee_max", "per_ticket_fee_min_tiered", "per_ticket_fee_max_tiered", "total_price"]
 
     model_config = ConfigDict(
@@ -188,7 +188,7 @@ class EvenuePriceLevel(BaseModel):
             "per_ticket_fee_max": PerTicketFeeMax.from_dict(obj["per_ticket_fee_max"]) if obj.get("per_ticket_fee_max") is not None else None,
             "per_ticket_fee_min_tiered": PerTicketFeeMinTiered.from_dict(obj["per_ticket_fee_min_tiered"]) if obj.get("per_ticket_fee_min_tiered") is not None else None,
             "per_ticket_fee_max_tiered": PerTicketFeeMaxTiered.from_dict(obj["per_ticket_fee_max_tiered"]) if obj.get("per_ticket_fee_max_tiered") is not None else None,
-            "total_price": TotalPrice.from_dict(obj["total_price"]) if obj.get("total_price") is not None else None
+            "total_price": TotalPrice1.from_dict(obj["total_price"]) if obj.get("total_price") is not None else None
         })
         return _obj
 
