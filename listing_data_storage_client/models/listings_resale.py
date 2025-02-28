@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SingleChangeSchema(BaseModel):
+class ListingsResale(BaseModel):
     """
-    SingleChangeSchema
+    ListingsResale
     """ # noqa: E501
-    updated: datetime
-    __properties: ClassVar[List[str]] = ["updated"]
+    active: Optional[List[StrictStr]] = None
+    updated: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["active", "updated"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class SingleChangeSchema(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a JSON string"""
+        """Create an instance of ListingsResale from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +69,16 @@ class SingleChangeSchema(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if active (nullable) is None
+        # and model_fields_set contains the field
+        if self.active is None and "active" in self.model_fields_set:
+            _dict['active'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SingleChangeSchema from a dict"""
+        """Create an instance of ListingsResale from a dict"""
         if obj is None:
             return None
 
@@ -81,6 +86,7 @@ class SingleChangeSchema(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "active": obj.get("active"),
             "updated": obj.get("updated")
         })
         return _obj
